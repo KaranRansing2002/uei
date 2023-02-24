@@ -22,6 +22,7 @@ import AssuredWorkloadOutlinedIcon from '@mui/icons-material/AssuredWorkloadOutl
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import image from '../../assets/ayanokoji.jpg'
+import CardMembershipIcon from '@mui/icons-material/CardMembership';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -159,7 +160,13 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-
+            <Item
+              title="certificates"
+              to="/certificates"
+              icon={<CardMembershipIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
             <Typography
               variant="h6"
               color={colors.grey[300]}

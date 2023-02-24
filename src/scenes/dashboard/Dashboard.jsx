@@ -14,6 +14,14 @@ import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 import PieChart from "../../components/PieChart";
 import code from '../../assets/codeforces-sponsored-by-ton.png'
+import School from "./School";
+import codeC from '../../assets/cc-logo.svg'
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import WebIcon from '@mui/icons-material/Web';
+import { Link } from "react-router-dom";
+import AttendanceBarGraph from "../../components/Attendance";
+const attendanceData = [100, 80, 120, 90, 110, 100, 130, 140, 110, 120, 90, 100];
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -22,6 +30,7 @@ const Dashboard = () => {
   return (
     
     <Box m="20px">
+      {/* <PieChart /> */}
       {/* <PieChart/> */}
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -67,6 +76,7 @@ const Dashboard = () => {
               <img className='scale-[0.75]' src={code}></img>
             }
           />
+          
         </Box>
         <Box
           gridColumn="span 3"
@@ -76,55 +86,67 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="431,225"
-            subtitle="Sales Obtained"
-            progress="0.50"
-            increase="+21%"
+            title="1907"
+            subtitle="Codechef"
+            progress="0.75"
+            increase="-40%"
             icon={
-              <PointOfSaleIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
+              <img className='scale-[1.5]' src={codeC}></img>
             }
           />
+          
         </Box>
+        
+        
         <Box
-          gridColumn="span 3"
+          gridColumn="span 6"
           backgroundColor={colors.primary[400]}
           display="flex"
           alignItems="center"
           justifyContent="center"
         >
           <StatBox
-            title="32,441"
-            subtitle="New Clients"
+            isReq={false}
+            title="500+ conn."
+            subtitle="Profile"
             progress="0.30"
-            increase="+5%"
+            // increase="+5%"
             icon={
-              <PersonAddIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
+              <a href='https://www.linkedin.com/in/karan-ransing-9424a61ab/' target="_blank">
+                <LinkedInIcon
+                  sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                  />
+              </a>
             }
-          />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
+            />
           <StatBox
-            title="1,325,134"
-            subtitle="Traffic Received"
-            progress="0.80"
-            increase="+43%"
+            isReq={false}
+            title="24 repos "
+            subtitle="Repository"
+            progress="0.30"
+            // increase="+5%"
             icon={
-              <TrafficIcon
+              <a href='https://github.com/KaranRansing2002' target="_blank">
+                <GitHubIcon
+                  sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                  />
+              </a>
+            }
+          />
+          <StatBox
+            isReq={false}
+            title="10+"
+            subtitle="Portfolio"
+            progress="0.30"
+            // increase="+5%"
+            icon={
+              <WebIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
               />
             }
           />
         </Box>
+        
 
         {/* ROW 2 */}
         <Box
@@ -243,7 +265,7 @@ const Dashboard = () => {
             {/* <Typography>Includes extra misc expenditures and costs</Typography> */}
           </Box>
         </Box>
-        <Box
+        {/* <Box
           gridColumn="span 4"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
@@ -256,10 +278,10 @@ const Dashboard = () => {
             Sales Quantity
           </Typography>
           <Box height="250px" mt="-20px">
-            <BarChart isDashboard={true} />
+            <AttendanceBarGraph attendanceData={attendanceData} />
           </Box>
-        </Box>
-        {/* <Box
+        </Box> */}
+        <Box
           gridColumn="span 4"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
@@ -275,7 +297,7 @@ const Dashboard = () => {
           <Box height="200px">
             <GeographyChart isDashboard={true} />
           </Box>
-        </Box> */}
+        </Box>
       </Box>
     </Box>
   );

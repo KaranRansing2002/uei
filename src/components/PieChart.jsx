@@ -7,10 +7,12 @@ const PieChart = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
-    <div className="h-92 w-full">
-    <ResponsivePie
+    <div className='h-36 w-full'>
+        <ResponsivePie
         data={data}
-        margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
+        height={200}
+        width={300}    
+        margin={{ top: 10, right: 80, bottom: 80, left: 80 }}
         innerRadius={0.5}
         padAngle={0.7}
         cornerRadius={3}
