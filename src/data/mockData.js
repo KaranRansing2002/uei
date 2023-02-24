@@ -268,52 +268,28 @@ export const mockDataInvoices = [
 
 export const mockTransactions = [
   {
-    txId: "01e4dsa",
-    user: "johndoe",
-    date: "2021-09-01",
-    cost: "43.95",
+    txId: "Google Kickstart",
+    desc: "scored a global rank of 108",
+    date: "2023-01-01",
+    stars: 4,
   },
   {
-    txId: "0315dsaa",
-    user: "jackdower",
-    date: "2022-04-01",
-    cost: "133.45",
+    txId: "Codeforces",
+    desc: "scored a global rank of 108 in IItByte race patna",
+    date: "2023-02-01",
+    stars: 4,
   },
   {
-    txId: "01e4dsa",
-    user: "aberdohnny",
-    date: "2021-09-01",
-    cost: "43.95",
+    txId: "codechef",
+    desc: "codechef cookoff rank 621",
+    date: "2023-02-10",
+    stars: 4,
   },
   {
-    txId: "51034szv",
-    user: "goodmanave",
-    date: "2022-11-05",
-    cost: "200.95",
-  },
-  {
-    txId: "0a123sb",
-    user: "stevebower",
-    date: "2022-11-02",
-    cost: "13.55",
-  },
-  {
-    txId: "01e4dsa",
-    user: "aberdohnny",
-    date: "2021-09-01",
-    cost: "43.95",
-  },
-  {
-    txId: "120s51a",
-    user: "wootzifer",
-    date: "2019-04-15",
-    cost: "24.20",
-  },
-  {
-    txId: "0315dsaa",
-    user: "jackdower",
-    date: "2022-04-01",
-    cost: "133.45",
+    txId: "Codeforces",
+    desc: "scored a global rank 422",
+    date: "2023-01-01",
+    stars: 4,
   },
 ];
 
@@ -398,42 +374,37 @@ export const mockBarData = [
 ];
 
 export const mockPieData = [
-  {
-    id: "hack",
-    label : "c++",
-    value: 700,
-    color: "hsl(104, 70%, 50%)"
-  }
-  // {
-  //   id: "hack",
-  //   label: "hack",
-  //   value: 239,
-  //   color: "hsl(104, 70%, 50%)",
-  // },
-  // {
-  //   id: "make",
-  //   label: "make",
-  //   value: 170,
-  //   color: "hsl(162, 70%, 50%)",
-  // },
-  // {
-  //   id: "go",
-  //   label: "go",
-  //   value: 322,
-  //   color: "hsl(291, 70%, 50%)",
-  // },
-  // {
-  //   id: "lisp",
-  //   label: "lisp",
-  //   value: 503,
-  //   color: "hsl(229, 70%, 50%)",
-  // },
-  // {
-  //   id: "scala",
-  //   label: "scala",
-  //   value: 584,
-  //   color: "hsl(344, 70%, 50%)",
-  // },
+    {
+      "id": "ruby",
+      "label": "ruby",
+      "value": 433,
+      "color": "hsl(81, 70%, 50%)"
+    },
+    {
+      "id": "javascript",
+      "label": "javascript",
+      "value": 452,
+      "color": "hsl(195, 70%, 50%)"
+    },
+    {
+      "id": "haskell",
+      "label": "haskell",
+      "value": 15,
+      "color": "hsl(257, 70%, 50%)"
+    },
+    {
+      "id": "css",
+      "label": "css",
+      "value": 213,
+      "color": "hsl(241, 70%, 50%)"
+    },
+    {
+      "id": "c",
+      "label": "c",
+      "value": 126,
+      "color": "hsl(93, 70%, 50%)"
+    }
+  
 ];
 
 export const mockLineData = [

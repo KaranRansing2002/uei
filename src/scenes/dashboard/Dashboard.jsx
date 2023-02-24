@@ -12,13 +12,17 @@ import GeographyChart from "../../components/GeographyChart";
 import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
+import PieChart from "../../components/PieChart";
+import code from '../../assets/codeforces-sponsored-by-ton.png'
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   return (
+    
     <Box m="20px">
+      {/* <PieChart/> */}
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
@@ -55,14 +59,12 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="12,361"
-            subtitle="Emails Sent"
+            title="1400"
+            subtitle="Codeforces"
             progress="0.75"
             increase="+14%"
             icon={
-              <EmailIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
+              <img className='scale-[0.75]' src={code}></img>
             }
           />
         </Box>
@@ -179,7 +181,7 @@ const Dashboard = () => {
             p="15px"
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Recent Transactions
+              Recent Achievements
             </Typography>
           </Box>
           {mockTransactions.map((transaction, i) => (
@@ -200,7 +202,7 @@ const Dashboard = () => {
                   {transaction.txId}
                 </Typography>
                 <Typography color={colors.grey[100]}>
-                  {transaction.user}
+                  {transaction.desc}
                 </Typography>
               </Box>
               <Box color={colors.grey[100]}>{transaction.date}</Box>
@@ -209,7 +211,7 @@ const Dashboard = () => {
                 p="5px 10px"
                 borderRadius="4px"
               >
-                ${transaction.cost}
+                {transaction.stars}
               </Box>
             </Box>
           ))}
@@ -223,7 +225,7 @@ const Dashboard = () => {
           p="30px"
         >
           <Typography variant="h5" fontWeight="600">
-            Campaign
+            Languages Used
           </Typography>
           <Box
             display="flex"
@@ -231,15 +233,14 @@ const Dashboard = () => {
             alignItems="center"
             mt="25px"
           >
-            <ProgressCircle size="125" />
+            <PieChart />
             <Typography
               variant="h5"
               color={colors.greenAccent[500]}
               sx={{ mt: "15px" }}
             >
-              $48,352 revenue generated
             </Typography>
-            <Typography>Includes extra misc expenditures and costs</Typography>
+            {/* <Typography>Includes extra misc expenditures and costs</Typography> */}
           </Box>
         </Box>
         <Box
