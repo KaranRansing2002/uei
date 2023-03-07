@@ -1,0 +1,17 @@
+@keyframes gradient-x {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.hello {
+    /* background-image: linear-gradient(to right, #48c6ef 0%, #6f86d6 100%); */
+    background-size: 200% auto;
+    animation: gradient-x 1.5s ease infinite;
+}

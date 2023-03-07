@@ -14,7 +14,7 @@ import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 import PieChart from "../../components/PieChart";
 import code from '../../assets/codeforces-sponsored-by-ton.png'
-import School from "./School";
+import School from "../School";
 import codeC from '../../assets/cc-logo.svg'
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -30,9 +30,6 @@ const Dashboard = () => {
   return (
     
     <Box m="20px">
-      {/* <PieChart /> */}
-      {/* <PieChart/> */}
-      {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 

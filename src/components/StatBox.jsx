@@ -7,7 +7,7 @@ const StatBox = ({ title, subtitle, icon, progress, increase ,isReq}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const classp = useRef((isReq!=undefined) ? "none" : "block")
-  console.log(isReq,classp.current)
+  // console.log(isReq,classp.current)
   return (
     <Box width="100%" m="0 30px">
       <Box display="flex" justifyContent="space-between">
