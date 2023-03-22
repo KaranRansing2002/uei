@@ -7,6 +7,8 @@ import Dashboard from './scenes/dashboard/Dashboard';
 import Login from './scenes/Login/Login';
 import { useAuth0 } from '@auth0/auth0-react'
 import axios from 'axios'
+import { Route, Routes } from 'react-router-dom';
+import Pform from './scenes/profile-forms/Pform';
 
 
 function App() {
@@ -22,7 +24,6 @@ function App() {
     try {
       await loginWithPopup();
       token = await getAccessTokenSilently();
-      console.log(token)
       const resp = await axios.get('http://localhost:8000/protect', {
         headers: {
           authorization : `Bearer ${token}`
@@ -31,7 +32,6 @@ function App() {
       console.log(resp.data);
     } catch (error) {
       console.log(error.message)
-      console.log(token);
     }
   }
 
@@ -43,7 +43,10 @@ function App() {
             <Sidebar isSidebar={isSidebar}/>
             <main className='w-full'>
                 <Topbar logout={logout} />
-              <Dashboard/>
+              <Routes>
+                <Route path='/' exact element={<Dashboard />}></Route>
+                <Route path='/form' exact element={<Pform/>}></Route>
+              </Routes>
             </main>
             </div> :
             <Login loginwith={signin} />
