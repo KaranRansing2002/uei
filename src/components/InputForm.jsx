@@ -35,6 +35,8 @@ function SemDetails(props) {
     const [done, setDone] = useState(false)
     const semSet = useRef(new Set());
     useEffect(() => {
+        // console.log(state); 
+        console.log(classIndex,"here")
         if (!semSet.current.has(sems)) {
             semSet.current.add(sems);
             dispatch({ type: 'Add_Semester', payload: { sems , classIndex } })
@@ -43,7 +45,7 @@ function SemDetails(props) {
             }
         }
         // console.log(state)
-    }, [dispatch, sems]);
+    }, [dispatch, sems,state,classIndex]);
     
     const [count, setCount] = useState(0);
 
@@ -146,8 +148,8 @@ function InputForm(props) {
                 <div>
                     <input type='date' className='border border-blue-200 bg-transparent' />
                     <div className='h-auto flex '>
-                        <SemDetails sems={1} dispatch={dispatch} state={state} classIndex={ClassN ? ClassN : year} aggregate={aggregate} setAggregate={setAggregate}/>
-                        <SemDetails sems={2} dispatch={dispatch} state={state} classIndex={ClassN ? ClassN : year} aggregate={aggregate} setAggregate={setAggregate}/>
+                        <SemDetails sems={1} dispatch={dispatch} state={state} classIndex={year==undefined ? ClassN : year} aggregate={aggregate} setAggregate={setAggregate}/>
+                        <SemDetails sems={2} dispatch={dispatch} state={state} classIndex={year==undefined ? ClassN : year} aggregate={aggregate} setAggregate={setAggregate}/>
                     </div>
                 </div>
             }

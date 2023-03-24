@@ -46,6 +46,7 @@ function Pform() {
       case 'Add_Semester': {
         let { sems, classIndex } = action.payload;
         const newClasses = [...state.classes];
+        // classIndex -= 1;
         console.log("semester",classIndex)
         newClasses[classIndex] = {
             ...newClasses[classIndex], 
@@ -131,8 +132,9 @@ function Pform() {
       }
       case 'Add_Semester': {
         let { sems, classIndex } = action.payload;
+        // classIndex -= 1;
         const newClasses = [...state.years];
-        console.log("semester",classIndex)
+        // console.log("semester",classIndex)
         newClasses[classIndex] = {
             ...newClasses[classIndex], 
             semesters: [...newClasses[classIndex].semesters, {sem : sems,subjects : []}],
@@ -216,7 +218,7 @@ function Pform() {
   //////////////////////////////Inst-end///////////////////////////////////////////////
 
   /////////////////////////skills///////////////////////////////////////////////
-  
+  // const [skills]
 
   const [toggle, setToggle] = useState(()=>[false, false, false, false]);
   
@@ -258,7 +260,7 @@ function Pform() {
         {toggle[1] && 
           years.map((val, index) => {
             return (
-              <InputForm year={index+1} state={insState} dispatch={idispatch}/>
+              <InputForm year={index} state={insState} dispatch={idispatch}/>
             )
           })
         }
