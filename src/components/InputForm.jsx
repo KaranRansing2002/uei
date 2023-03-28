@@ -131,7 +131,7 @@ function InputForm(props) {
     return (
         <div className='mt-2 border p-4 '>
             <div className='flex  gap-2 w-full '>
-                <div className='border border-slate-400 w-28 text-slate-300 text-lg p-2 rounded flex justify-center items-center'>{`${year==undefined ? 'Class' : 'Year'} ${year==undefined ? Class+1 : year}`}</div>
+                <div className='border border-slate-400 w-28 text-slate-300 text-lg p-2 rounded flex justify-center items-center'>{`${year==undefined ? 'Class' : 'Year'} ${year==undefined ? Class+1 : year+1}`}</div>
                 {/* <CssTextField id="custom-css-outlined-input" value={`class ${Class}`} sx={{width : "100px"}} /> */}
                 <CssTextField label="Aggreagate" id="custom-css-outlined-input" value={aggregate} sx={{ width: "100px", fontSize : "100px" }} />
                 <div className='flex'>
@@ -147,7 +147,7 @@ function InputForm(props) {
             {toggle &&
                 <div>
                     <input type='date' className='border border-blue-200 bg-transparent' />
-                    <div className='h-auto flex '>
+                    <div className='h-auto sm:flex '>
                         <SemDetails sems={1} dispatch={dispatch} state={state} classIndex={year==undefined ? ClassN : year} aggregate={aggregate} setAggregate={setAggregate}/>
                         <SemDetails sems={2} dispatch={dispatch} state={state} classIndex={year==undefined ? ClassN : year} aggregate={aggregate} setAggregate={setAggregate}/>
                     </div>

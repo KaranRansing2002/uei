@@ -17,7 +17,7 @@ function Login(props) {
     <div className="hello text-center text-5xl font-bold bg-transparent text-transparent bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text gradient-x duration-3000">
       Unified Education Interface
     </div>
-      <img src="https://logodix.com/logo/284396.png" alt="Image" className='scale-75' />
+      <img src="https://logodix.com/logo/284396.png" alt="Image" className='scale-75' loading='lazy' />
         <Button variant="contained" color="success" style={{ color: '#001830', fontWeight: 'bold' }} onClick={login}>
             Authenticate
         </Button>
