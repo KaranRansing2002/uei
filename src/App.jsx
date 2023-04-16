@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ColorModeContext, useMode } from './theme';
 import {CssBaseline,ThemeProvider} from '@mui/material'
 import Topbar from './scenes/global/Topbar';
@@ -16,8 +16,6 @@ function App() {
   const [isSidebar, setIsSidebar] = useState(true);
 
   const { loginWithPopup, loginWithRedirect, logout, user, isAuthenticated,getAccessTokenSilently } = useAuth0()
-
-  
 
   const signin = async () => {
     let token = "";

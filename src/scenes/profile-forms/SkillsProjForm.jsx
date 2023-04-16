@@ -1,18 +1,15 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-import InputForm from '../../components/InputForm';
 import axios from 'axios'
 import { Button, Icon, IconButton, TextField, Typography } from '@mui/material';
 import Header from '../../components/Header';
-import schoollogo from '../../assets/schoollogo.png'
-import AddIcon from '@mui/icons-material/Add';
 import { CssTextField } from './textfield';
-import SchoolForm from './SchoolForm';
-import InstituteForm from './InstituteForm';
 import CloseIcon from '@mui/icons-material/Close';
 import { getRankValue,getRankName } from './cf-utility';
 import Profile from './Profile';
+import { intersectionBy } from 'lodash';
 
-const Dsa = ({platform}) => {
+
+const Dsa = ({platform,dispatch}) => {
     const [usernames, setUsernames] = useState([]);
     const [userName, setUserName] = useState('')
     const cp = useRef({
@@ -32,7 +29,7 @@ const Dsa = ({platform}) => {
         
         cp.current['platform'] = platform;
         cp.current['usernames'] = usernames;
-        console.log(usernames)
+        // console.log(usernames)
 
         
         if (usernames.length > 0 && platform=='Codeforces') {
@@ -49,7 +46,7 @@ const Dsa = ({platform}) => {
                     .then(resp => {
                         for (let i = 0; i < resp.length; i++){
                             resp[i].data.result.map((prob) => prob.verdict == 'OK' && cnt++);
-                            console.log(mset.current);
+                            // console.log(mset.current);
                         }
                         cp.current.solved = cnt;
                         setUpdatecnt((prev) => prev + 1);
@@ -65,9 +62,13 @@ const Dsa = ({platform}) => {
                     cp.current.solved = resp.data.totalSolved;
                     cp.current.tag = 'NA'
                     setUpdatecnt(prev => prev + 1);
+                }).catch((err) => {
+                    alert('there may be some issue we are fixing it for leetcode api')
                 })
         }
-        console.log(cp.current);
+        // console.log(cp.current);
+        if(usernames.length > 0 && platform!='') dispatch({ type: 'Add_Obj',payload : {objName : 'dsa' ,objValue : {platform,usernames}} })
+
     }, [platform, usernames])
     
     const handleDetails = (e) => {
@@ -76,7 +77,7 @@ const Dsa = ({platform}) => {
             ...cp.current,
             [name] : value
         }
-        console.log(cp.current);
+        // console.log(cp.current);
     }
 
     return (
@@ -111,24 +112,79 @@ const Dsa = ({platform}) => {
     )
 }
 
-const Projects = () => {
+const Projects = ({mainDispatch}) => {
     const [userName, setUserName] = useState('');
     const [data, setData] = useState([]);
+    const [projs,setProjs] = useState([])
     const handleGithub = (e) => {
         e.preventDefault(); 
-        axios.get(`https://api.github.com/users/${userName}/repos?per_page=4&sort=updated`)
+        axios.get(`https://api.github.com/users/${userName}/repos?sort=updated`)
             .then(resp => {
-                // console.log(resp)
+                console.log(resp.data)
+                // resp.data.map((obj,index)=>setProjs((prev)=>[...prev,{name : obj.name,url : obj.url}]))
                 setData(resp.status!=404 ?  resp.data : []);
             })
     }
+    
+    const initialState = { projects: [] };
+    const reducer = (state, action) => {
+        switch (action.type) {
+            case 'handle_project':
+                const { id, desc } = action.payload;
+                const isPresent = state["projects"].some(obj => obj.id === id);
+                if (isPresent) {
+                    const newProjects = state["projects"].map(obj => {
+                        if (obj.id === id && desc) {
+                        // create a new object with updated desc array
+                        return { ...obj, desc: [...obj.desc, desc] };
+                        } else {
+                            return obj;
+                        }
+                    });
+                    // filter out the object if desc is not provided
+                    const filteredProjects = newProjects.filter(obj => obj.id !== id || obj.desc.length > 0);
+                    return {
+                        ...state,
+                        projects: filteredProjects
+                    };
+                }
+                else {
+                    return {
+                        ...state,
+                        projects: [...state["projects"], { id: id, desc: [] }]
+                    };
+                }
+
+            default: 
+                return state
+            
+        }
+    };
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    useEffect(() => {
+        // console.log(state);
+        mainDispatch({type : 'Add_Projects',payload : {projs : state.projects}})
+    },[state,dispatch])
 
     return (
         <div className='border border-slate-400 mt-2 p-2'>
             <Header title="PROJECTS" H="h4" subtitle={"Link your github or add projects"} />
             <form onSubmit={handleGithub}><CssTextField label='username' value={userName} onChange={(e)=>setUserName(e.target.value)}/></form>
-            {userName.length>0 && data[0] && <div className='grid grid-cols-1 md:grid-cols-2 gap-4 my-2'>
-                {data.map((obj, ind) => <Profile key={ind} {...obj} />)}
+            {userName && 
+                <div className='flex flex-col gap-2 my-2'>
+                    <h1 className=''>Select atmost 4 of them and write a description..</h1>
+                    <div className='flex gap-2 flex-wrap max-h-72 overflow-y-scroll'>
+                    {
+                        data.map((val, index) => (
+                            <div key={index} className={`rounded p-2 flex items-center h-8 bg-${state.projects.some(obj => obj.id === val.id) ? 'green-500' : '[#0081ff]'} cursor-pointer transition-colors duration-500 ease-in-out hover:bg-green-500`} onClick={()=>dispatch({type : 'handle_project',payload : {id : val.id}})}>{val.name}</div>
+                        ))
+                    }
+                    </div>
+                </div>
+            }
+            {userName.length > 0 && data[0] && <div className='grid grid-cols-1 md:grid-cols-1 mt-8 gap-4 my-2 max-h-screen overflow-y-scroll'>
+                {intersectionBy(data,state.projects,'id').map((obj, ind) => <Profile key={ind} {...obj} state={state} dispatch={dispatch} />)}
             </div>}
             {(userName.length > 0 && data[0]) ? <Typography variant="h5" color={"#8fcdaf"}>
                 ...more <br/>
@@ -145,11 +201,15 @@ const Projects = () => {
 function SkillsProjForm() {
     const [toggle, setToggle] = useState(false)
 
+
+
     const initialState = {
         languages: [],
         frameworks: [],
         tools: [],
-        skills :[]
+        skills: [],
+        dsa: [],
+        projects : []
     }
 
     const reducer = (state, action) => {
@@ -166,7 +226,36 @@ function SkillsProjForm() {
                 const newState = { ...state };
                 newState[named] = newState[named].slice(0, index).concat(newState[named].slice(index + 1));                console.log(index,newState);
                 return newState
-
+            
+            case 'Add_Obj':
+                const { objName, objValue } = action.payload;
+                const platformKey = 'platform'; // Change this to the key you want to check for duplicates
+                
+                // Check if an object with the same platform key exists in the array
+                const ind = state[objName].findIndex(obj => obj[platformKey] === objValue[platformKey]);
+                
+                if (ind !== -1) {
+                    // Replace the existing object with the new one
+                    const newArray = [...state[objName]];
+                    newArray[ind] = objValue;
+                    return {
+                    ...state,
+                    [objName]: newArray
+                    };
+                } else {
+                    // Add the new object to the array
+                    return {
+                    ...state,
+                    [objName]: [...state[objName], objValue]
+                    };
+                }
+                  
+            case 'Add_Projects':
+                const { projs } = action.payload;
+                return {
+                    ...state,
+                    projects : projs
+                }
             default:
                 return state;
         }
@@ -224,10 +313,10 @@ function SkillsProjForm() {
                         </div>
                     </div>
                     <div className='border border-slate-400 p-2'>
-                        <Header title={"DSA/CP"} H={"h4"} subtitle="your data-structures and algorithmics skills" />
-                            <Dsa platform="Codeforces" />
-                            <Dsa platform="Leetcode" />
-                            <Dsa platform="Codechef" />
+                        <Header title={"DSA/CP"} H={"h4"} subtitle="your data-structures and algorithmics skills (press enter to save & search)" />
+                            <Dsa dispatch={dispatch} platform="Codeforces" />
+                            <Dsa dispatch={dispatch} platform="Leetcode" />
+                            <Dsa dispatch={dispatch} platform="Codechef" />
                     </div>
                         
                 </div> : 
@@ -242,7 +331,7 @@ function SkillsProjForm() {
                     </div>
                 </div>    
             }
-            <Projects/>
+            <Projects mainDispatch={dispatch}/>
         </div>
     )
 }

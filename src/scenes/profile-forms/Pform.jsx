@@ -3,6 +3,7 @@ import Header from '../../components/Header';
 import SchoolForm from './SchoolForm';
 import InstituteForm from './InstituteForm';
 import SkillsProjForm from './SkillsProjForm';
+import WorkExp from './WorkExp';
 
 function Pform() {
 
@@ -19,6 +20,7 @@ function Pform() {
       {/* skills */}
       <SkillsProjForm />
       
+      <WorkExp/>
     </div>
   );
 }

@@ -90,9 +90,14 @@ function SchoolForm() {
         }
         return arr;
     })
+
+    const handleSave = () => {
+        console.log("schoolstate", state);
+    }
+
     const [toggle, setToggle] = useState(false);
   return (
-    <div className={`m-2 border border-slate-400 p-4  ${toggle && 'overflow-y-scroll max-h-screen'}`}>
+    <div className={`m-2 border border-slate-400 p-4 ${toggle && 'overflow-y-scroll max-h-screen'}`}>
         <div className=''><Header title="SCHOOL LEVEL" subtitle={"your school qualifications from class 1 to 12"} H={"h3"} /></div>
         <Button onClick={() => setToggle((prev)=>!prev) } variant="contained" sx={{ backgroundColor : "#0081ff" }} >Add details</Button>
         { toggle && 
@@ -102,6 +107,9 @@ function SchoolForm() {
             )
           })
         }
+        <div className='flex flex-col my-2'>
+            <div className='flex self-end'><Button onClick={handleSave} variant="contained" color="success">Save Details</Button></div>
+        </div>  
     </div>
   )
 }
