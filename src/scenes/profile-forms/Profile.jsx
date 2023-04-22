@@ -10,7 +10,7 @@ export default function Profile(props) {
   const [descArray, setDescArray] = useState([]);
 
   useEffect(() => {
-    console.log("hello");
+    // console.log("hello");
     state.projects.map((obj) => {
       if (obj.id == id) {
         setDescArray(obj.desc);
@@ -61,7 +61,7 @@ export default function Profile(props) {
             <ul style={{ listStyleType: 'disc',paddingLeft : "1rem" }}>
               {
                 descArray && descArray.map((obj, index) => (
-                  <li className="text-base">{obj}</li>
+                  <li key={index} className="text-base">{obj}</li>
                 ))
               }
             </ul>

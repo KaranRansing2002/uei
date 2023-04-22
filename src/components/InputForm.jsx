@@ -31,12 +31,12 @@ const NameClass = 'bg-transparent border border-blue-200 w-16 text-center m-1';
 function SemDetails(props) {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
-    const { sems, dispatch, state, classIndex,aggregate,setAggregate} = props
+    const { sems, dispatch, state, classIndex,aggregate,setAggregate,setSemsAgg} = props
     const [done, setDone] = useState(false)
     const semSet = useRef(new Set());
     useEffect(() => {
         // console.log(state); 
-        console.log(classIndex,"here")
+        // console.log(classIndex,"here")
         if (!semSet.current.has(sems)) {
             semSet.current.add(sems);
             dispatch({ type: 'Add_Semester', payload: { sems , classIndex } })
@@ -87,11 +87,12 @@ function SemDetails(props) {
 
     return (
         <div className='flex-1 '>
-            <h3 className='text-center m-2 text-lg'>{`Semester ${sems}`}</h3>
+            <h3 className='text-center  text-lg'>{`Semester ${sems}`}</h3>
+            <CssTextField sx={{ marginX: "40%", width: "60px" }} id="standard-basic" label="Agg.." variant="standard" onChange={(e) => setSemsAgg(prev => { const newP = [...prev]; newP[sems - 1] = e.target.value; return newP; })} />
             {
                 subState.current.map((obj, index) => {
                     return (
-                        <div className='flex-1 flex justify-center '>
+                        <div key={index} className='flex-1 flex justify-center '>
                             <input className={NameClass} name='subject' onChange={(e)=>handleChange(e,index)} placeholder='subject'/>
                             <Tooltip title='marks obtained'><input className={NameClass} name='marksObtained' onChange={(e)=>handleChange(e,index)}/></Tooltip>
                             <Tooltip title='total marks'><input className={NameClass} name='totalMarks' onChange={(e) => handleChange(e, index)} /></Tooltip>
@@ -119,21 +120,28 @@ function InputForm(props) {
     const Class = ClassN
     useEffect(() => {
         if (Class) {
-            dispatch({ type: 'Add_Class', payload: { Class : Class+1 } });
+            dispatch({ type: 'Add_Class', payload: { Class : ClassN+1 } });
         }
         else {
             dispatch({ type: 'Add_Year', payload: { year : year } });
         }
     }, [ClassN, dispatch,year]);
 
-    const [aggregate,setAggregate] = useState(0)
+    const [aggregate, setAggregate] = useState(0)
+    
+    const [semsAgg, setSemsAgg] = useState([0, 0]); 
+
+    useEffect(() => {
+        
+        setAggregate((parseInt(semsAgg[0]) + parseInt(semsAgg[1])) / 2);
+    },[semsAgg])
 
     return (
         <div className='mt-2 border p-4 '>
             <div className='flex  gap-2 w-full '>
                 <div className='border border-slate-400 w-28 text-slate-300 text-lg p-2 rounded flex justify-center items-center'>{`${year==undefined ? 'Class' : 'Year'} ${year==undefined ? Class+1 : year+1}`}</div>
                 {/* <CssTextField id="custom-css-outlined-input" value={`class ${Class}`} sx={{width : "100px"}} /> */}
-                <CssTextField label="Aggreagate" id="custom-css-outlined-input" value={aggregate} sx={{ width: "100px", fontSize : "100px" }} />
+                <CssTextField label="Aggreagate" id="custom-css-outlined-input" value={aggregate} sx={{ width: "100px", fontSize : "100px" }} onChange={(e)=>setAggregate(e.target.value)} />
                 <div className='flex'>
                     <IconButton color="secondary" aria-label="upload picture" component="label">
                         <input hidden accept="pdf/*" type="file" />
@@ -148,8 +156,8 @@ function InputForm(props) {
                 <div>
                     <input type='date' className='border border-blue-200 bg-transparent' />
                     <div className='h-auto sm:flex '>
-                        <SemDetails sems={1} dispatch={dispatch} state={state} classIndex={year==undefined ? ClassN : year} aggregate={aggregate} setAggregate={setAggregate}/>
-                        <SemDetails sems={2} dispatch={dispatch} state={state} classIndex={year==undefined ? ClassN : year} aggregate={aggregate} setAggregate={setAggregate}/>
+                        <SemDetails sems={1} setSemsAgg={setSemsAgg} dispatch={dispatch} state={state} classIndex={year==undefined ? ClassN : year} aggregate={aggregate} setAggregate={setAggregate}/>
+                        <SemDetails sems={2} setSemsAgg={setSemsAgg} dispatch={dispatch} state={state} classIndex={year==undefined ? ClassN : year} aggregate={aggregate} setAggregate={setAggregate}/>
                     </div>
                 </div>
             }
@@ -158,21 +166,4 @@ function InputForm(props) {
 }
 
 export default InputForm
-/*
- 
-                    {
-                        subs.map((val) => {
-                            return(
-                            <div className='flex wrap gap-2 w-60'>
-                                <input className='bg-transparent border border-blue-200 w-24 text-center' placeholder='subject' />
-                                <input className='bg-transparent border border-blue-200 w-16 text-center' type="number" />
-                            </div> )
-                        })     
-                    }
-                <div className='flex items-center'>
-                        <IconButton onClick={()=>setSubs((old)=>[...old,"sd"])}>
-                            <AddIcon/>   
-                        </IconButton> 
-                        <h3>add subjects</h3>   
-                    </div>
-*/
+

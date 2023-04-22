@@ -6,110 +6,37 @@ import Header from '../../components/Header';
 import schoollogo from '../../assets/schoollogo.png'
 import AddIcon from '@mui/icons-material/Add';
 import { CssTextField } from './textfield';
+import MarksheetForm from '../../components/MarksheetForm';
 
 function SchoolForm() {
 
-    const initialState = {
-        classes: [],
-    };
-    const ClassSet = new Set();
-    const reducer = (state, action) => {
-        switch (action.type) {
-            case 'Add_Class': {
-                const { Class } = action.payload
-                const ok = ClassSet.has(Class);
-                ClassSet.add(Class)
-                const newClasses = [...state.classes];
-                if (!ok) {
-                    newClasses.push({Class: Class,semesters : [] })
-                }
-                return {
-                    ...state,
-                    classes: newClasses
-                }
-            }
-            case 'Add_Semester': {
-                let { sems, classIndex } = action.payload;
-                const newClasses = [...state.classes];
-                // classIndex -= 1;
-                console.log("semester",classIndex)
-                newClasses[classIndex] = {
-                    ...newClasses[classIndex], 
-                    semesters: [...newClasses[classIndex].semesters, {sem : sems,subjects : []}],
-                };
-                return {  
-                    ...state,
-                    classes: newClasses
-                }
-            }
-            case 'Add_Subjects': {
-                const { subjectDetails, classIndex, semIndex } = action.payload;
-                const newClasses = [...state.classes];
-                // console.log(classIndex,newClasses)
-                const newSubjects = newClasses[classIndex].semesters[semIndex].subjects
-                let ok = false;
-                for (let i = 0; i < newSubjects.length; i++){
-                    if (newSubjects[i].subject == subjectDetails.subject) {
-                    newSubjects[i] = subjectDetails;
-                    ok = true;
-                    break;
-                    }
-                }
-                if (ok) {
-                    newClasses[classIndex].semesters[semIndex] = {
-                    ...newClasses[classIndex].semesters[semIndex],
-                    subjects : newSubjects
-                    }
-                }
-                else {
-                    newSubjects.push(subjectDetails)
-                    newClasses[classIndex].semesters[semIndex] = {
-                    ...newClasses[classIndex].semesters[semIndex],
-                    subjects : newSubjects
-                    }
-                }
-            }
-            case 'Add_Aggregate':
-                const { aggregate, classIndex } = action.payload;
-                const newClasses = [...state.classes];
-                newClasses[classIndex].aggregatePercentage = aggregate;
-                return {
-                    ...state,
-                    classes: newClasses
-                }
-            
-            default:
-                return state;
-        }
-    };
-    const [state, dispatch] = useReducer(reducer, initialState);
-    const [classes, setClasses] = useState(() => {
-        let arr = [];
-        for (let i = 1; i <= 12; i++) {
-            arr.push(i);
-        }
-        return arr;
-    })
+  const [toggle, setToggle] = useState(false);
+  const [classes, setClasses] = useState([0]);
 
-    const handleSave = () => {
-        console.log("schoolstate", state);
-    }
+  const schoolInfo = useRef([]);
 
-    const [toggle, setToggle] = useState(false);
+  const handleSave = () => {
+    console.log(schoolInfo.current);
+  }
+
   return (
-    <div className={`m-2 border border-slate-400 p-4 ${toggle && 'overflow-y-scroll max-h-screen'}`}>
-        <div className=''><Header title="SCHOOL LEVEL" subtitle={"your school qualifications from class 1 to 12"} H={"h3"} /></div>
-        <Button onClick={() => setToggle((prev)=>!prev) } variant="contained" sx={{ backgroundColor : "#0081ff" }} >Add details</Button>
-        { toggle && 
-          classes.map((Class, index)=>{
-            return (
-              <InputForm ClassN={index} state={state} dispatch={dispatch} />
-            )
-          })
+    <div className={`m-2 border border-slate-400 p-4 flex flex-col gap-2`}>
+      <div className=''><Header mb='10px' title="SCHOOL LEVEL" subtitle={"your school qualifications from class 1 to 12"} H={"h3"} /></div>
+      <div><Button onClick={() => setToggle((prev) => !prev)} variant="contained" sx={{ backgroundColor: "#0081ff" }} >Add details</Button></div>
+      <div className='overflow-y-auto max-h-screen'>
+        {toggle &&
+          classes.map((obj, index) => <MarksheetForm key={index} stateinfo={schoolInfo} info='school' />)
         }
-        <div className='flex flex-col my-2'>
-            <div className='flex self-end'><Button onClick={handleSave} variant="contained" color="success">Save Details</Button></div>
-        </div>  
+        {toggle && <div className='mt-2'><IconButton onClick={() => setClasses(prev => [...prev, 0])}><AddIcon /></IconButton> Add Class</div>}
+      </div>
+      <div className='flex flex-col '>
+        {toggle &&
+          <div className='flex self-end'>
+
+            <Button onClick={handleSave} variant="contained" color="success">Save Details</Button>
+          </div>
+        }
+      </div>
     </div>
   )
 }

@@ -90,13 +90,13 @@ function WorkExp() {
         setUpd(prev => prev + 1);
     }
 
-    useEffect(() => {
-        console.log("state", state);
-    },[state])
+    const handleSave = () => {
+        console.log(state);
+    }
 
     const [desc, setDesc] = useState('');
 
-    const [expsArray, setExpsArray] = useState([]);
+    const [expsArray, setExpsArray] = useState([0]);
 
 
   return (
@@ -114,9 +114,14 @@ function WorkExp() {
         </div>
         {
             expsArray.map((obj, index) => (
-                <Experience handleAddExps={handleAddExps}/>   
+                <Experience key={index} handleAddExps={handleAddExps}/>   
             ))      
         }  
+        <div className='flex flex-col mt-2'>
+            <div className='flex self-end'>
+                <Button onClick={handleSave} variant="contained" color="success">Save Details</Button>
+            </div>
+        </div>
     </div>
   )
 }

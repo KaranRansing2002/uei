@@ -10,7 +10,6 @@ import axios from 'axios'
 import { Route, Routes } from 'react-router-dom';
 import Pform from './scenes/profile-forms/Pform';
 
-
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
