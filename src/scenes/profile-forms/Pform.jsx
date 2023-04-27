@@ -8,7 +8,7 @@ import WorkExp from './WorkExp';
 function Pform() {
 
   return (
-    <div className=''>
+    <div className='overflow-y-scroll element-class max-h-screen scrollbar-hide'>
       <div className='m-2'><Header title="EDUCATION" subtitle="Enter your education details" H={"h2"}/></div>
       
       {/* school */}

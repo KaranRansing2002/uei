@@ -21,3 +21,11 @@ html,body,#root,.app,content{
 ::-webkit-scrollbar-track:hover{
   background : #555;
 }
+
+.element-class {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+.element-class::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}

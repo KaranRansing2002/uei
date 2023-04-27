@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState,useContext } from 'react';
 import InputForm from '../../components/InputForm';
 import axios from 'axios'
 import { Button, Icon, IconButton, TextField } from '@mui/material';
@@ -7,16 +7,41 @@ import schoollogo from '../../assets/schoollogo.png'
 import AddIcon from '@mui/icons-material/Add';
 import { CssTextField } from './textfield';
 import MarksheetForm from '../../components/MarksheetForm';
+import { useAuth0 } from '@auth0/auth0-react'
+import { userContext } from '../../App';
 
 function SchoolForm() {
 
   const [toggle, setToggle] = useState(false);
   const [classes, setClasses] = useState([0]);
+  const { getAccessTokenSilently } = useAuth0()
+  const { headerToken, uid } = useContext(userContext)
+  const [image, setImage] = useState(undefined);
 
   const schoolInfo = useRef([]);
 
-  const handleSave = () => {
-    console.log(schoolInfo.current);
+  const handleSave = async() => {
+    console.log(JSON.stringify(schoolInfo.current));
+    // const token = await getAccessTokenSilently();
+    const resp = await axios.post('http://localhost:8000/school/', {uid : uid, schoolDetails : schoolInfo.current }, {
+      headers: {
+        authorization : `Bearer ${headerToken}`
+      }
+    }); 
+    console.log(resp);
+  }
+
+  const handleGet = async () => {
+    const id = uid
+    // const token = await getAccessTokenSilently();
+    console.log(uid);
+    const resp = await axios.get(`http://localhost:8000/school/${id}`, {
+      headers: {
+        authorization: `Bearer ${headerToken}`
+      }
+    })
+    console.log(resp.data.resp[0].schoolDetails[0].image);
+    setImage(resp.data.resp[0].schoolDetails[0].image)
   }
 
   return (
@@ -34,6 +59,7 @@ function SchoolForm() {
           <div className='flex self-end'>
 
             <Button onClick={handleSave} variant="contained" color="success">Save Details</Button>
+            {/* <Button onClick={handleGet} variant="contained" color="success">GET</Button> */}
           </div>
         }
       </div>
