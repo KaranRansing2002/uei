@@ -13,10 +13,9 @@ import { userContext } from '../App';
 import FileBase64 from 'react-file-base64';
 import imageCompression from 'browser-image-compression';
 
-const Semester = ({ aggOption, sem, dispatch }) => {
-
-    const [agg, setAgg] = useState(0);
-    const subjects = useRef([]);
+const Semester = ({ aggOption, sem, dispatch,updateObj }) => {
+    const [agg, setAgg] = useState(updateObj!=undefined ? parseInt(updateObj.semesters[sem-1].Aggregate.split(' ')[0]) : 0);
+    const subjects = useRef(updateObj!=undefined ? updateObj.semesters[sem-1].subjects : []);
     const [updatecnt, setUpdateCnt] = useState(0);
 
     const handleAddSubject = () => {
@@ -42,6 +41,10 @@ const Semester = ({ aggOption, sem, dispatch }) => {
     }
 
     useEffect(() => {
+        console.log(subjects);
+    },[subjects])
+
+    useEffect(() => {
         dispatch({ type: 'Add_Semester', payload: { semIndex: sem - 1, semester: { 'Aggregate': `${agg} ${aggOption}`, subjects: subjects.current } } })
     }, [agg])
 
@@ -55,8 +58,8 @@ const Semester = ({ aggOption, sem, dispatch }) => {
                 {
                     subjects.current.map((obj, index) => (
                         <div key={index} className='flex gap-4 justify-center my-2 items-center'>
-                            <CssTextField label='subject' size='small' sx={{ width: '100px' }} onChange={(e) => subjects.current[index]['subject'] = e.target.value} />
-                            <CssTextField label={aggOption} size='small' sx={{ width: '100px' }} onBlur={(e) => handleChange(e, index)} />
+                            <CssTextField label='subject' size='small' sx={{ width: '100px' }} value={subjects.current[index]['subject']} onChange={(e) => { subjects.current[index]['subject'] = e.target.value; setUpdateCnt(prev => prev + 1); }} />
+                            <CssTextField label={aggOption} size='small' sx={{ width: '100px' }} value={subjects.current[index]['marks']} onChange={(e) => handleChange(e, index)} />
                             <Tooltip title='delete'><IconButton onClick={() => handleDeleteSub(index)}><DeleteOutlineIcon /></IconButton></Tooltip>
                         </div>
                     ))
@@ -70,18 +73,21 @@ const Semester = ({ aggOption, sem, dispatch }) => {
     )
 }
 
-function MarksheetForm({ stateinfo, info }) {
-
+function MarksheetForm({ stateinfo, info, update }) {
+    let updateObj = update != undefined ? stateinfo.current[update] : undefined;
     const [expand, setExpand] = useState(false)
-    const [Class, setClass] = useState('');
-    const [aggOption, setAggOption] = useState('percentage');
-    const [Aggregate, setAggregate] = useState('');
-    const {uid} = useContext(userContext)
+    const [Class, setClass] = useState(update!=undefined ? updateObj.Class : '');
+    const [aggOption, setAggOption] = useState(update!=undefined ? updateObj.aggregate.split(' ')[1] : 'percentage');
+    const [Aggregate, setAggregate] = useState(update!=undefined ? updateObj.aggregate.split(' ')[0] : '');
     const [school, setSchool] = useState(() => {
         if (stateinfo.current.length && stateinfo.current[stateinfo.current.length - 1].school)
             return stateinfo.current[stateinfo.current.length - 1].school
         return '';
     })
+    useEffect(() => {
+        console.log(Class, Aggregate);
+        if(update) console.log(updateObj)
+    },[Class,Aggregate])
     const [open, setOpen] = useState(false);
 
     const reducer = (state, action) => {
@@ -125,7 +131,7 @@ function MarksheetForm({ stateinfo, info }) {
                 return state;
         }
     }
-    const [state, dispatch] = useReducer(reducer, { Class: '', aggregate: '', semesters: [{}, {}],Date : new Date(),image : undefined});
+    const [state, dispatch] = useReducer(reducer, { Class: Class, aggregate: Aggregate, semesters: (update!=undefined ? updateObj.semesters : [{}, {}]),Date : (update!=undefined ? updateObj.Date.toString().substring(0.10) :  new Date()),image : (update!=undefined ? updateObj.image :  undefined)});
 
     useEffect(() => {
         // console.log(Aggregate);
@@ -149,8 +155,14 @@ function MarksheetForm({ stateinfo, info }) {
                 break;
             }
         }
-        if (!isPresent)
-            info == 'school' ? stateinfo.current.push({ ...state, school }) : stateinfo.current.push({ ...state });
+        if (!isPresent) {
+            if (info == 'school') {
+                update!=undefined ? stateinfo.current[update]={ ...state, school } :  stateinfo.current.push({ ...state, school });
+            } else {
+                update!=undefined ? stateinfo.current[update]={ ...state} :  stateinfo.current.push({ ...state });
+            }
+        }
+        console.log(stateinfo.current);
         // console.log(stateinfo.current.pop());
         setOpen(true);
     }
@@ -159,7 +171,7 @@ function MarksheetForm({ stateinfo, info }) {
         <div className='border border-slate-400 p-4 flex flex-col gap-2 mb-2'>
             <div className='sm:flex sm:gap-2 grid grid-cols-2 gap-y-2 auto-rows-max  '>
                 <div><CssTextField label={`Enter ${info == 'college' ? 'Year' : 'Class'}`} sx={{ width: "120px", fontSize: "100px" }} placeholder={`ex ${info == 'college' ? 'Year' : 'Class'} 1`} value={Class} onChange={(e) => setClass(e.target.value)} /></div>
-                <div><CssTextField label="Aggregate" id="custom-css-outlined-input" sx={{ width: "100px", fontSize: "100px" }} onChange={handleChange} /></div>
+                <div><CssTextField label="Aggregate" id="custom-css-outlined-input" sx={{ width: "100px", fontSize: "100px" }} value={Aggregate} onChange={handleChange} /></div>
                 <div><Selector aggOption={aggOption} setAggOption={setAggOption} /></div>
                 <div className='flex items-center ml-auto'>
                     Upload Marksheet
@@ -180,14 +192,14 @@ function MarksheetForm({ stateinfo, info }) {
             <div className='flex gap-2 '>
                 <Button variant="filled" size='small' onClick={() => setExpand(prev => !prev)}>Expand <ExpandMoreIcon /></Button>
                 <Button variant="filled" size='small' onClick={handleSave}>Save <SaveIcon sx={{ margin: "2px", height: '15px' }} /></Button>
-                <input type='date' className='bg-transparent' onChange={(e)=>dispatch({type : 'Add_Date',payload : {date : e.target.value}})}/>
+                <input type='date' value={state.Date} className='bg-transparent' onChange={(e)=>dispatch({type : 'Add_Date',payload : {date : e.target.value}})}/>
             </div>
 
             {
                 expand &&
                 <div className='border border-slate-400 sm:flex'>
-                    <Semester aggOption={aggOption} sem={1} dispatch={dispatch} />
-                    <Semester aggOption={aggOption} sem={2} dispatch={dispatch} />
+                    <Semester aggOption={aggOption} sem={1} dispatch={dispatch} updateObj={updateObj}/>
+                    <Semester aggOption={aggOption} sem={2} dispatch={dispatch} updateObj={updateObj}/>
                 </div>
             }
             {

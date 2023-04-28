@@ -31,7 +31,7 @@ function App() {
           authorization : `Bearer ${token}`
         }
       })
-      console.log(resp.data.uid);
+      // console.log(resp.data.uid);
       setUid(resp.data.uid);
     };
     isAuthenticated && fetchData();
