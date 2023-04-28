@@ -7,7 +7,7 @@ import {Auth0Provider} from '@auth0/auth0-react'
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Router>
       <Auth0Provider
         domain="uei.jp.auth0.com"
@@ -22,5 +22,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <App />
       </Auth0Provider>
     </Router>
-  </React.StrictMode>,
+  // </React.StrictMode>,
 )

@@ -47,7 +47,7 @@ const Experience = ({handleAddExps,mobj,setOpen}) => {
                 </ul>
             </div>  
             <div className=''>
-                <Button onClick={mobj!=undefined ? ()=>setOpen(true) : ()=>handleAddExps(Exp.current)} variant='outlined' sx={{width : '100px',color : 'white' , backgroundColor : '#0082ff'}}>save</Button>
+                <Button onClick={mobj != undefined ? () => { setOpen(true);mobj = Exp.current } : ()=>handleAddExps(Exp.current)} variant='outlined' sx={{width : '100px',color : 'white' , backgroundColor : '#0082ff'}}>save</Button>
             </div>
         </div> 
     )
@@ -76,9 +76,12 @@ function WorkExp() {
                     }
                 })
                 console.log(resp.data.resp);
-                if(resp.data.resp!=undefined) prevObj = resp.data.resp;
-                setUpdate(true);
-                setExpsArray([])
+                if (resp.data.resp != undefined) {
+                    console.log("sdkfn")
+                    prevObj = resp.data.resp;
+                    setExpsArray([])
+                    setUpdate(true);
+                }
             }
             getDetails();
         } catch (error) {
@@ -133,8 +136,6 @@ function WorkExp() {
         setOpen(true)
     }
 
-    console.log(prevObj)
-
     const [desc, setDesc] = useState('');
 
     const [open, setOpen] = useState(false);
@@ -154,12 +155,12 @@ function WorkExp() {
             <Typography>Add Experience</Typography>  
         </div>
         {
-            update && prevObj.exps.map((obj, index) => (
+            update && prevObj?.exps?.map((obj, index) => (
                 <Experience key={index} mobj={prevObj.exps[index]} setOpen={setOpen} />  
             ))     
         }  
         {
-            update && expsArray.map((obj, index) => (
+            expsArray.map((obj, index) => (
                 <Experience key={index} handleAddExps={handleAddExps}/>   
             ))      
         }  
