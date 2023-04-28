@@ -29,7 +29,7 @@ function InstituteForm() {
       // console.log(resp.data.resp?.schoolDetails)
       insinfo.current = resp.data.resp == undefined ? {} : resp.data.resp;
       instituteinfo.current = resp.data.resp.instituteinfos;
-      console.log(instituteinfo);
+      // console.log(instituteinfo);
       setUpdate(true)
     }
     handleGet();

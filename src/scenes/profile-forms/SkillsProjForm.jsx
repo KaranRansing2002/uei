@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useRef, useState } from 'react';
 import axios from 'axios'
 import { Button, Icon, IconButton, TextField, Typography } from '@mui/material';
 import Header from '../../components/Header';
@@ -7,6 +7,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import { getRankValue, getRankName } from './cf-utility';
 import Profile from './Profile';
 import { intersectionBy } from 'lodash';
+import url from '../../url';
+import { userContext } from '../../App';
+import SnackbarL from '../../components/SnackbarL';
 
 
 const Dsa = ({ platform, dispatch }) => {
@@ -126,6 +129,12 @@ const Projects = ({ mainDispatch }) => {
             })
     }
 
+    useEffect(() => {
+        if (userName != '') {
+            mainDispatch({type : 'Add_username',payload : {gname : 'githubusername',gvalue : userName}})
+        }
+    },[userName,mainDispatch])
+
     const initialState = { projects: [] };
     const reducer = (state, action) => {
         switch (action.type) {
@@ -200,17 +209,30 @@ const Projects = ({ mainDispatch }) => {
 
 function SkillsProjForm() {
     const [toggle, setToggle] = useState(false)
+    const [update, setUpdate] = useState(false);
 
-
-
-    const initialState = {
+    let initialState = {
         languages: [],
         frameworks: [],
         tools: [],
         skills: [],
         dsa: [],
-        projects: []
+        projects: [],
+        githubusername : ''
     }
+    const { headerToken, uid } = useContext(userContext)
+    
+    const getDetails = async () => {
+        const resp = await axios.get(`${url}/project/${uid}`, {
+            headers: {
+                Authorization : `Bearer ${headerToken}`
+            }
+        })
+        if(resp.status!=404) initialState = resp.data.resp;
+        return initialState;
+        setUpdate(true)
+    }
+
 
     const reducer = (state, action) => {
         switch (action.type) {
@@ -256,21 +278,36 @@ function SkillsProjForm() {
                     ...state,
                     projects: projs
                 }
+            case 'Add_username':
+                const { gname, gvalue } = action.payload;
+                return {
+                    ...state,
+                    [gname] : gvalue
+                }
             default:
                 return state;
         }
     }
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const handleSave = () => {
+    const handleSave = async() => {
         console.log(state);
+        const resp = await axios.post(`${url}/project`, { uid: uid, ...state }, {
+            headers: {
+                Authorization : `Bearer ${headerToken}`
+            }
+        })
+        console.log(resp.data);
+        setOpen(true);
     }
-
+    // console.log(state);
     const [language, setLanguage] = useState('');
     const [framework, setFramework] = useState('');
     const [tool, setTool] = useState('')
     const [skill, setSkill] = useState('');
     const [stream, setStream] = useState('')
+    const [open, setOpen] = useState(false);
+
     return (
         <div className='m-2 border border-slate-400 p-4'>
             <div className=''><Header title="SKILLS & PROJECTS" subtitle={"your skillsets and relevant projects "} H={"h3"} /></div>
@@ -280,7 +317,7 @@ function SkillsProjForm() {
                 <Button onClick={() => { setToggle((prev) => true); setStream('other') }} variant="filled" sx={stream === 'other' ? { backgroundColor: '#0081ff' } : {}} >Other</Button>
             </div>
             {
-                toggle && stream == 'cs' ?
+                toggle && stream == 'cs' && update?
                     <div className='flex flex-col gap-2'>
                         <div className='flex flex-col gap-2'>
                             <div className='flex gap-2 items-center flex-wrap'>
@@ -312,7 +349,7 @@ function SkillsProjForm() {
                             <Header title={"DSA/CP"} H={"h4"} subtitle="your data-structures and algorithmics skills (press enter to save & search)" />
                             <Dsa dispatch={dispatch} platform="Codeforces" />
                             <Dsa dispatch={dispatch} platform="Leetcode" />
-                            <Dsa dispatch={dispatch} platform="Codechef" />
+                            {/* <Dsa dispatch={dispatch} platform="Codechef" /> */}
                         </div>
 
                     </div> :
@@ -333,6 +370,9 @@ function SkillsProjForm() {
                     <Button onClick={handleSave} variant="contained" color="success">Save Details</Button>
                 </div>
             </div>
+            
+            <SnackbarL title='Details saved successfully' open={open} setOpen={setOpen} />
+            
         </div>
     )
 }

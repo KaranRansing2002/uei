@@ -1,16 +1,19 @@
 import { Button, IconButton, Typography } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Header from '../../components/Header'
 import { CssTextField } from './textfield'
 import AddIcon from '@mui/icons-material/Add';
+import axios from 'axios'
+import url from '../../url';
+import { userContext } from '../../App';
+import SnackbarL from '../../components/SnackbarL';
 
-
-const Experience = ({handleAddExps}) => {
+const Experience = ({handleAddExps,mobj,setOpen}) => {
     const Exp = useRef({
-        company: '',
-        position: '',
-        yoe: '',
-        desc : []
+        company: mobj!=undefined ? mobj.company : '',
+        position: mobj!=undefined ? mobj.position : '',
+        yoe: mobj!=undefined ? mobj.yoe : '',
+        desc : mobj!=undefined ? mobj.desc : []
     })
 
     const [upd, setUpd] = useState(0);
@@ -30,7 +33,7 @@ const Experience = ({handleAddExps}) => {
             <div className='flex gap-2 flex-wrap'>
                 <CssTextField label="Company-Name" name='company' value={Exp.current.company} onChange={handleExp}/> 
                 <CssTextField label="Position / Role" name='position' value={Exp.current.position} onChange={handleExp}/> 
-                <CssTextField label="Years of Exp" name='yoe' value={Exp.current.yoe} onChange={handleExp}/>
+                <CssTextField label="Years of Exp" type='number' name='yoe' value={Exp.current.yoe} onChange={handleExp}/>
                 {/* <CssTextField label="site-link"/> */}
             </div>  
             <div className='grid gap-2 '>
@@ -44,28 +47,57 @@ const Experience = ({handleAddExps}) => {
                 </ul>
             </div>  
             <div className=''>
-                <Button onClick={()=>handleAddExps(Exp.current)} variant='outlined' sx={{width : '100px',color : 'white' , backgroundColor : '#0082ff'}}>save</Button>
+                <Button onClick={mobj!=undefined ? ()=>setOpen(true) : ()=>handleAddExps(Exp.current)} variant='outlined' sx={{width : '100px',color : 'white' , backgroundColor : '#0082ff'}}>save</Button>
             </div>
         </div> 
     )
 }
 
+let prevObj = {};
+
 function WorkExp() {
     const [field, setField] = useState("Work-Exp");
-
+    const [update, setUpdate] = useState(false);
     const [state, setState] = useState({
         field: '',
         exps : []
     })
 
+    const { headerToken, uid } = useContext(userContext)
+
+    const [expsArray, setExpsArray] = useState([0]);
+
+    useEffect(() => {
+        try {
+            const getDetails = async () => {
+                const resp = await axios.get(`${url}/work/${uid}`, {
+                    headers: {
+                        authorization : `Bearer ${headerToken}`
+                    }
+                })
+                console.log(resp.data.resp);
+                if(resp.data.resp!=undefined) prevObj = resp.data.resp;
+                setUpdate(true);
+                setExpsArray([])
+            }
+            getDetails();
+        } catch (error) {
+            console.log(error);
+        }
+    },[])
+
     const handleAddExps = (newExpObj) => {
-        setState(prevState => {
+        const isDuplicate = state.exps.some((exp) => exp.id === newExpObj.id);
+        if (!isDuplicate) {
+          setState(prevState => {
             return {
               ...prevState,
               exps: [...prevState.exps, newExpObj]
-            }
+            };
           });
-    }
+        }
+        setOpen(true)
+    };
     useEffect(() => {
         setState((prev) => {
             return {
@@ -90,13 +122,22 @@ function WorkExp() {
         setUpd(prev => prev + 1);
     }
 
-    const handleSave = () => {
+    const handleSave = async() => {
         console.log(state);
+        const resp = await axios.post(`${url}/work`, { uid: uid, ...state }, {
+            headers: {
+                authorization : `Bearer ${headerToken}`
+            }
+        })
+        console.log(resp);
+        setOpen(true)
     }
+
+    console.log(prevObj)
 
     const [desc, setDesc] = useState('');
 
-    const [expsArray, setExpsArray] = useState([0]);
+    const [open, setOpen] = useState(false);
 
 
   return (
@@ -113,7 +154,12 @@ function WorkExp() {
             <Typography>Add Experience</Typography>  
         </div>
         {
-            expsArray.map((obj, index) => (
+            update && prevObj.exps.map((obj, index) => (
+                <Experience key={index} mobj={prevObj.exps[index]} setOpen={setOpen} />  
+            ))     
+        }  
+        {
+            update && expsArray.map((obj, index) => (
                 <Experience key={index} handleAddExps={handleAddExps}/>   
             ))      
         }  
@@ -122,6 +168,7 @@ function WorkExp() {
                 <Button onClick={handleSave} variant="contained" color="success">Save Details</Button>
             </div>
         </div>
+        <SnackbarL title='Details saved successfully' open={open} setOpen={setOpen} />
     </div>
   )
 }
