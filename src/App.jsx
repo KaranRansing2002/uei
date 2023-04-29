@@ -10,6 +10,7 @@ import axios from 'axios'
 import { Route, Routes } from 'react-router-dom';
 import Pform from './scenes/profile-forms/Pform';
 import './App.css'
+import PersonalSetting from './scenes/PersonalSetting';
 
 export const userContext = React.createContext();
 
@@ -21,7 +22,8 @@ function App() {
 
   const [headerToken, setHeaderToken] = useState('');
   const [uid, setUid] = useState(undefined);
-
+  const [student, setStudent] = useState(null);
+  
   useEffect(() => {
     const fetchData = async () => {
       const token = await getAccessTokenSilently();
@@ -32,6 +34,7 @@ function App() {
         }
       })
       // console.log(resp.data.uid);
+      setStudent(resp.data);
       setUid(resp.data.uid);
     };
     isAuthenticated && fetchData();
@@ -51,13 +54,14 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline>
           <userContext.Provider value={{ uid, headerToken }}>
-            {(isAuthenticated && uid) ? <div className='app flex  '>
-              <Sidebar isSidebar={isSidebar} />
+            {(isAuthenticated && uid && student!=null) ? <div className='app flex  '>
+              <Sidebar isSidebar={isSidebar} student={student} />
               <main className='w-full'>
                 <Topbar logout={logout} />
                 <Routes>
                   <Route path='/' exact element={<Dashboard />}></Route>
                   <Route path='/form' exact element={<Pform />}></Route>
+                  <Route path='/personal' exact element={<PersonalSetting student={student} />}></Route>
                 </Routes>
               </main>
             </div> :

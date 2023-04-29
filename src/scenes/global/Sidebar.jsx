@@ -16,7 +16,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import AssuredWorkloadOutlinedIcon from '@mui/icons-material/AssuredWorkloadOutlined';
 import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
-import image from '../../assets/ayanokoji.jpg'
+// import image from '../../assets/ayanokoji.jpg'
 import CardMembershipIcon from '@mui/icons-material/CardMembership';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
@@ -37,11 +37,15 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
-const Sidebar = () => {
+const Sidebar = ({ student }) => {
+  console.log(student.image)
+  let name = '';
+  student.name.split(' ').map(word=>name+=word.charAt(0).toUpperCase()+word.slice(1)+" ")
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  
 
   useEffect(() => {
     function handleResize() {
@@ -109,7 +113,8 @@ const Sidebar = () => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={image}
+                  src={student.image}
+                  referrerPolicy="no-referrer"
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>
@@ -120,7 +125,7 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Karan Ransing
+                  {name}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
                   Student

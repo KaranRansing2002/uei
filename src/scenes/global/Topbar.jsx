@@ -9,12 +9,14 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import LogoutIcon from '@mui/icons-material/Logout';
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Topbar = (props) => {
   const logout = props.logout
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
+  const navigate = useNavigate();
 
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
@@ -42,10 +44,10 @@ const Topbar = (props) => {
         <IconButton>
           <NotificationsOutlinedIcon />
         </IconButton>
-        <IconButton>
+        <IconButton >
           <SettingsOutlinedIcon />
         </IconButton>
-        <IconButton>
+        <IconButton onClick = {()=>navigate('/personal')}>
           <PersonOutlinedIcon />
         </IconButton>
         <IconButton onClick={logout}>
