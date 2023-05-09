@@ -38,7 +38,7 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
 };
 
 const Sidebar = ({ student }) => {
-  console.log(student.image)
+  // console.log(student.image)
   let name = '';
   student.name.split(' ').map(word=>name+=word.charAt(0).toUpperCase()+word.slice(1)+" ")
   const theme = useTheme();

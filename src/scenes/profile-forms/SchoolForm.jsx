@@ -9,6 +9,7 @@ import { CssTextField } from './textfield';
 import MarksheetForm from '../../components/MarksheetForm';
 import { useAuth0 } from '@auth0/auth0-react'
 import { userContext } from '../../App';
+import url from '../../url';
 
 function SchoolForm() {
 
@@ -21,7 +22,7 @@ function SchoolForm() {
 
   useEffect(() => {
     const handleGet = async () => {
-      const resp = await axios.get(`http://localhost:8000/school/${uid}`, {
+      const resp = await axios.get(`${url}/school/${uid}`, {
         headers: {
           authorization: `Bearer ${headerToken}`
         }
@@ -34,7 +35,7 @@ function SchoolForm() {
   },[])
 
   const handleSave = async() => {
-    const resp = await axios.post('http://localhost:8000/school/', {uid : uid, schoolDetails : schoolInfo.current }, {
+    const resp = await axios.post(`${url}/school/`, {uid : uid, schoolDetails : schoolInfo.current }, {
       headers: {
         authorization : `Bearer ${headerToken}`
       }

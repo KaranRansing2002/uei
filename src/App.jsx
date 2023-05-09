@@ -11,6 +11,7 @@ import { Route, Routes } from 'react-router-dom';
 import Pform from './scenes/profile-forms/Pform';
 import './App.css'
 import PersonalSetting from './scenes/PersonalSetting';
+import url from './url';
 
 export const userContext = React.createContext();
 
@@ -28,7 +29,7 @@ function App() {
     const fetchData = async () => {
       const token = await getAccessTokenSilently();
       setHeaderToken(token);
-      const resp = await axios.get('http://localhost:8000/signin', {
+      const resp = await axios.get(`${url}/signin`, {
         headers: {
           authorization : `Bearer ${token}`
         }
