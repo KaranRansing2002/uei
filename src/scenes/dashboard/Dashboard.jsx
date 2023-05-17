@@ -21,19 +21,21 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import WebIcon from '@mui/icons-material/Web';
 import { Link } from "react-router-dom";
 import AttendanceBarGraph from "../../components/Attendance";
+import { useContext } from "react";
+import { userContext } from "../../App";
 const attendanceData = [100, 80, 120, 90, 110, 100, 130, 140, 110, 120, 90, 100];
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const classNames = 'overflow-y-scroll element-class max-h-screen scrollbar-hide'
+  const { student } = useContext(userContext);
   return (
 
     <div className={classNames}>
       <Box m="20px">
         <Box display="flex" justifyContent="space-between" alignItems="center">
           <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-
           <Box>
             <Button
               sx={{

@@ -11,8 +11,9 @@ import url from '../url';
 import { userContext } from '../App';
 import SnackbarL from '../components/SnackbarL';
 
-function PersonalSetting({ student }) {
-  console.log(student);
+function PersonalSetting() {
+  const { headerToken, uid } = useContext(userContext);
+  const student = JSON.parse(localStorage.getItem('student'));
   let name = '';
   student.name.split(' ').map(word => name += word.charAt(0).toUpperCase() + word.slice(1) + " ")
   const [image, setImage] = useState(student.image);
@@ -21,7 +22,6 @@ function PersonalSetting({ student }) {
   const maininfo = useRef({});
   const addtinfo = useRef({});
   const bio = useRef('')
-  const { headerToken, uid } = useContext(userContext);
 
   const handleUpdateMaininfo = async () => {
     console.log(maininfo.current);

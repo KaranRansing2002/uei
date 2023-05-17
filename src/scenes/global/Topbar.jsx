@@ -10,6 +10,7 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Navigate, useNavigate } from "react-router-dom";
+import SearchBar from "../../components/SearchBar";
 
 const Topbar = (props) => {
   const logout = props.logout
@@ -17,11 +18,12 @@ const Topbar = (props) => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
+  const student = JSON.parse(localStorage.getItem('student'))
 
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
       {/* SEARCH BAR */}
-      <Box
+      {/* <Box
         display="flex"
         backgroundColor={colors.primary[400]}
         borderRadius="3px"
@@ -30,7 +32,8 @@ const Topbar = (props) => {
         <IconButton type="button" sx={{ p: 1 }}>
           <SearchIcon />
         </IconButton>
-      </Box>
+      </Box> */}
+      <SearchBar color={colors.primary[400]} />
 
       {/* ICONS */}
       <Box display="flex">
@@ -47,7 +50,7 @@ const Topbar = (props) => {
         <IconButton >
           <SettingsOutlinedIcon />
         </IconButton>
-        <IconButton onClick = {()=>navigate('/personal')}>
+        <IconButton onClick = {()=>navigate(`/${student.username}/personal`)}>
           <PersonOutlinedIcon />
         </IconButton>
         <IconButton onClick={logout}>

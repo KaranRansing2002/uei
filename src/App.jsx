@@ -7,11 +7,12 @@ import Dashboard from './scenes/dashboard/Dashboard';
 import Login from './scenes/Login/Login';
 import { useAuth0 } from '@auth0/auth0-react'
 import axios from 'axios'
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import Pform from './scenes/profile-forms/Pform';
 import './App.css'
 import PersonalSetting from './scenes/PersonalSetting';
 import url from './url';
+import School from '@mui/icons-material/School';
 
 export const userContext = React.createContext();
 
@@ -24,6 +25,7 @@ function App() {
   const [headerToken, setHeaderToken] = useState('');
   const [uid, setUid] = useState(undefined);
   const [student, setStudent] = useState(null);
+  const navigate = useNavigate()
   
   useEffect(() => {
     const fetchData = async () => {
@@ -35,8 +37,10 @@ function App() {
         }
       })
       // console.log(resp.data.uid);
+      localStorage.setItem('student', JSON.stringify(resp.data));
       setStudent(resp.data);
       setUid(resp.data.uid);
+      navigate(`/${resp.data.username}/dashboard`);
     };
     isAuthenticated && fetchData();
   },[isAuthenticated])
@@ -54,15 +58,16 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline>
-          <userContext.Provider value={{ uid, headerToken }}>
+          <userContext.Provider value={{ uid, headerToken,student,setStudent}}>
             {(isAuthenticated && uid && student!=null) ? <div className='app flex  '>
               <Sidebar isSidebar={isSidebar} student={student} />
               <main className='w-full'>
                 <Topbar logout={logout} />
                 <Routes>
-                  <Route path='/' exact element={<Dashboard />}></Route>
-                  <Route path='/form' exact element={<Pform />}></Route>
-                  <Route path='/personal' exact element={<PersonalSetting student={student} />}></Route>
+                  <Route path={`/:username/dashboard`} exact element={<Dashboard />}></Route>
+                  <Route path={`/:username/form`} exact element={<Pform />}></Route>
+                  <Route path={`/:username/personal`} exact element={<PersonalSetting />}></Route>
+                  <Route path={`/:username/school`} exact element={<School />}></Route>
                 </Routes>
               </main>
             </div> :

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -18,6 +18,7 @@ import BusinessOutlinedIcon from '@mui/icons-material/BusinessOutlined';
 import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 // import image from '../../assets/ayanokoji.jpg'
 import CardMembershipIcon from '@mui/icons-material/CardMembership';
+import { userContext } from "../../App";
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -37,8 +38,10 @@ const Item = ({ title, to, icon, selected, setSelected }) => {
   );
 };
 
-const Sidebar = ({ student }) => {
+const Sidebar = () => {
   // console.log(student.image)
+  const { student ,uid} = useContext(userContext)
+  const {username} = student
   let name = '';
   student.name.split(' ').map(word=>name+=word.charAt(0).toUpperCase()+word.slice(1)+" ")
   const theme = useTheme();
@@ -137,7 +140,7 @@ const Sidebar = ({ student }) => {
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item
               title="Dashboard"
-              to="/"
+              to={`/${username}/dashboard`}
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -152,28 +155,28 @@ const Sidebar = ({ student }) => {
             </Typography>
             <Item
               title="School"
-              to="/school"
+              to={`/${username}/school`}
               icon={<SchoolIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="College"
-              to="/college"
+              to={`/${username}/college`}
               icon={<AssuredWorkloadOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Work/Internships"
-              to="/work"
+              to={`/${username}/work`}
               icon={<BusinessOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="certificates"
-              to="/certificates"
+              to={`/${username}/certificates`}
               icon={<CardMembershipIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -185,23 +188,23 @@ const Sidebar = ({ student }) => {
             >
               Pages
             </Typography>
-            <Item
+            {student.uid===uid && <Item
               title="Profile Form"
-              to="/form"
+              to={`/${username}/form`}
               icon={<PersonOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            />}
             <Item
               title="Calendar"
-              to="/calendar"
+              to={`/${username}/calendar`}
               icon={<CalendarTodayOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="QR"
-              to="/qrcode"
+              to={`/${username}/qrcode`}
               icon={<QrCodeScannerIcon />}
               selected={selected}
               setSelected={setSelected}
