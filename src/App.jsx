@@ -13,6 +13,9 @@ import './App.css'
 import PersonalSetting from './scenes/PersonalSetting';
 import url from './url';
 import School from '@mui/icons-material/School';
+import Algo from './scenes/algo/Algo';
+import 'chart.js/auto';
+
 
 export const userContext = React.createContext();
 
@@ -30,19 +33,19 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       const token = await getAccessTokenSilently();
-      setHeaderToken(token);
+      setHeaderToken(token);  
       const resp = await axios.get(`${url}/signin`, {
         headers: {
           authorization : `Bearer ${token}`
         }
       })
-      // console.log(resp.data.uid);
+
       localStorage.setItem('student', JSON.stringify(resp.data));
       setStudent(resp.data);
       setUid(resp.data.uid);
-      navigate(`/${resp.data.username}/dashboard`);
+      navigate(`/${resp.data.username}/algo`);
     };
-    isAuthenticated && fetchData();
+    isAuthenticated && fetchData(); 
   },[isAuthenticated])
 
   const signin = async () => {
@@ -68,6 +71,7 @@ function App() {
                   <Route path={`/:username/form`} exact element={<Pform />}></Route>
                   <Route path={`/:username/personal`} exact element={<PersonalSetting />}></Route>
                   <Route path={`/:username/school`} exact element={<School />}></Route>
+                  <Route path={`/:username/algo`} exact element={<Algo/>}></Route>
                 </Routes>
               </main>
             </div> :

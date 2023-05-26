@@ -77,7 +77,7 @@ function WorkExp() {
                 })
                 console.log(resp.data.resp);
                 if (resp.data.resp != undefined) {
-                    console.log("sdkfn")
+                    // console.log("sdkfn")
                     prevObj = resp.data.resp;
                     setExpsArray([])
                     setUpdate(true);

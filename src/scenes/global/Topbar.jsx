@@ -33,7 +33,7 @@ const Topbar = (props) => {
           <SearchIcon />
         </IconButton>
       </Box> */}
-      <SearchBar color={colors.primary[400]} />
+      <div className='w-8'><SearchBar color={colors.primary[400]} /></div>
 
       {/* ICONS */}
       <Box display="flex">

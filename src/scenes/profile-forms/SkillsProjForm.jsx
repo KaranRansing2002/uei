@@ -378,4 +378,3 @@ function SkillsProjForm() {
 }
 
 export default SkillsProjForm
-

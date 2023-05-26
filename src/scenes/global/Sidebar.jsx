@@ -19,6 +19,7 @@ import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 // import image from '../../assets/ayanokoji.jpg'
 import CardMembershipIcon from '@mui/icons-material/CardMembership';
 import { userContext } from "../../App";
+import LaptopMacIcon from '@mui/icons-material/LaptopMac';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -215,19 +216,19 @@ const Sidebar = () => {
               color={colors.grey[300]}
               sx={{ m: "15px 0 5px 20px" }}
             >
-              Charts
+              Skills
             </Typography>
             <Item
-              title="Bar Chart"
-              to="/bar"
+              title="DSA/CP"
+              to={`/${username}/algo`}
               icon={<BarChartOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Pie Chart"
-              to="/pie"
-              icon={<PieChartOutlineOutlinedIcon />}
+              title="Projects"
+              to={`/${username}/projects`}
+              icon={<LaptopMacIcon/>}
               selected={selected}
               setSelected={setSelected}
             />

@@ -9,11 +9,11 @@ import TrafficIcon from "@mui/icons-material/Traffic";
 import Header from "../../components/Header";
 import LineChart from "../../components/LineChart";
 import GeographyChart from "../../components/GeographyChart";
-import BarChart from "../../components/BarChart";
+import BarChart from "../../components/BarGraph";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 import PieChart from "../../components/PieChart";
-import code from '../../assets/codeforces-sponsored-by-ton.png'
+import code from '../../assets/codeforces.png'
 import School from "../School";
 import codeC from '../../assets/cc-logo.svg'
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -255,7 +255,7 @@ const Dashboard = () => {
               alignItems="center"
               mt="25px"
             >
-              <PieChart />
+              {/* <PieChart /> */}
               <Typography
                 variant="h5"
                 color={colors.greenAccent[500]}
