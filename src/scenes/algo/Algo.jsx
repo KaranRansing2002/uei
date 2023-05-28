@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import Header from '../../components/Header';
 import useSWR from 'swr';
 import url from '../../url';
@@ -12,6 +12,7 @@ import { json } from 'react-router-dom';
 import BarGraph from '../../components/BarGraph';
 import { useTheme } from '@emotion/react';
 import { tokens } from '../../theme';
+import SubmissionHeatmap from './SubmissionsHeatmap';
 
 const fetcher = async (...args) => {
     try {
@@ -34,9 +35,11 @@ const cfFetcher = async (cfusernames) => {
         tags: {},
         ratings: {},
         submissionDate: null,
+        values :[]
     };
-
+    let obj={}
     responses.forEach(resp => {
+        
         resp.data.result.forEach(prob => {
             if (prob.verdict === 'OK') {
                 cfdata.totalSolved = cfdata.totalSolved === undefined ? 1 : cfdata.totalSolved + 1;
@@ -47,11 +50,18 @@ const cfFetcher = async (cfusernames) => {
                 cfdata.ratings[prob.problem.rating] = cfdata.ratings[prob.problem.rating] === undefined
                     ? 1
                     : cfdata.ratings[prob.problem.rating] + 1;
-
+ 
                 cfdata.submissionDate = prob.creationTimeSeconds;
-            }
-        });
+                obj[(new Date(prob.creationTimeSeconds * 1000)).toISOString().split('T')[0]] = obj[(new Date(prob.creationTimeSeconds * 1000)).toISOString().split('T')[0]] === undefined ? 1 : obj[(new Date(prob.creationTimeSeconds * 1000)).toISOString().split('T')[0]]+1;
+            } 
+        }); 
+
     });
+    cfdata.values = Object.entries(obj).map(([date, count]) => ({
+        date,
+        count,
+    }));
+    console.log(cfdata.values)
 
     const resp = await axios.get(`https://codeforces.com/api/user.info?handles=${cfusernames[0]};${cfusernames.length > 1 ? cfusernames[1] : ''}`);
     const { result } = resp.data;
@@ -64,7 +74,17 @@ const cfFetcher = async (cfusernames) => {
 const ltFetcher = async (...args) => {
     const resp = await axios.get(...args);
     console.log(resp.data);
-    return resp.data
+    const data = resp.data.submissionCalendar;
+    const heatmapData = [];
+
+    for (const timestamp in data) {
+        const date = new Date(timestamp * 1000).toISOString().split('T')[0];
+        const count = data[timestamp];
+
+        heatmapData.push({ date, count });
+    }
+    console.log(heatmapData)
+    return { ...resp['data'],values : heatmapData }
 }
 
 
@@ -74,13 +94,20 @@ function Algo() {
     const { uid, student } = useContext(userContext);
 
     const { data, error } = useSWR(`${url}/project/${student.uid}`, fetcher);
+    const divRef = useRef(null);
+
+    useEffect(() => {
+        if (divRef.current) {
+          divRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+      }, []);
 
     if (error) {
         return <div>Error: Failed to fetch data</div>;
     }
 
 
-    let cfusernames, leetcodeUsername;
+    let cfusernames, leetcodeUsername; 
     data?.resp.dsa.forEach(obj => {
         if (obj.platform === 'Codeforces') {
             cfusernames = obj.usernames;
@@ -109,6 +136,9 @@ function Algo() {
     }
 
     const ltpiedata = { 'tags': { 'easy': ltinfo.easySolved, 'medium': ltinfo.mediumSolved, 'hard': ltinfo.hardSolved } }
+    // console.log(cfinfo)
+
+    
 
     return (
         <div className='p-2 overflow-y-scroll element-class max-h-[90%] scrollbar-hide'>
@@ -125,11 +155,8 @@ function Algo() {
                     </div>
                 </div>
             </div>
-            <div className='m-2 sm:flex'>
-                <div className='h-72 w-2/3'><BarGraph ratingsData={cfinfo.ratings} /></div>
-                <div className=' border border-white'>
-                    <h2>Languages</h2>
-                </div>
+            <div className='h-full' ref={divRef}>
+                <div className='h-72 w-full '><BarGraph ratingsData={cfinfo.ratings} /></div>
             </div>
             <div className='sm:grid sm:grid-cols-2 grid grid-cols-1'>
                 <div className={`h-44 sm:h-72 flex m-2 `}>
@@ -139,7 +166,14 @@ function Algo() {
                     <PieChart data={ltpiedata} name='Leetcode' color={colors.primary[400]}/>
                 </div>
             </div>
-            
+            <div className='m-2 w-[95%]'>
+                <div className='m-2'><Header title='Codeforces' subtitle={'no. of questions solved daily'} H={'h3'}/></div>
+                <SubmissionHeatmap data={cfinfo.values} />
+            </div>
+            <div className='m-2 mt-4 w-[95%]'>
+                <div className='m-2'><Header title='Leetcode' subtitle={'no. of questions solved daily'} H={'h3'}/></div>
+                <SubmissionHeatmap data={ltinfo.values} start='2022-01-01' end='2023-04-04' />
+            </div>
         </div>
     );
 }

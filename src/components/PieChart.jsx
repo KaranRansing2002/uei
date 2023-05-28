@@ -2,7 +2,7 @@ import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 
 const PieChart = ({ data ,name,color}) => {
-    console.log(data) 
+    // console.log(data) 
     const len = Object.entries(data.tags).length
     const chartData = {
         labels: Object.keys(data.tags),
@@ -57,9 +57,9 @@ const PieChart = ({ data ,name,color}) => {
     ));
 
     return (
-        <div className={`flex justify-evenly  m-2 p-4 gap-16 border-blue-400 bg-[${color}]`}>
+        <div className={`grid grid-cols-2 justify-evenly  m-2 p-4 gap-16 border-blue-400 bg-[${color}]`}>
             <Doughnut data={chartData} options={chartOptions} />
-            <div className={`${'overflow-y-scroll'} `}>
+            <div className={`${'overflow-y-scroll'} ml-4`}>
                 {legendItems}
             </div>
         </div>

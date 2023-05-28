@@ -7,7 +7,7 @@ import Dashboard from './scenes/dashboard/Dashboard';
 import Login from './scenes/Login/Login';
 import { useAuth0 } from '@auth0/auth0-react'
 import axios from 'axios'
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Pform from './scenes/profile-forms/Pform';
 import './App.css'
 import PersonalSetting from './scenes/PersonalSetting';
@@ -15,6 +15,7 @@ import url from './url';
 import School from '@mui/icons-material/School';
 import Algo from './scenes/algo/Algo';
 import 'chart.js/auto';
+import Projects from './scenes/projects/Projects';
 
 
 export const userContext = React.createContext();
@@ -29,7 +30,8 @@ function App() {
   const [uid, setUid] = useState(undefined);
   const [student, setStudent] = useState(null);
   const navigate = useNavigate()
-  
+  const location = useLocation();
+
   useEffect(() => {
     const fetchData = async () => {
       const token = await getAccessTokenSilently();
@@ -43,7 +45,10 @@ function App() {
       localStorage.setItem('student', JSON.stringify(resp.data));
       setStudent(resp.data);
       setUid(resp.data.uid);
-      navigate(`/${resp.data.username}/algo`);
+      
+      console.log(location.pathname)
+      const path = location.pathname === '/' ? `/${resp.data.username}/dashboard` : location.pathname;
+      navigate(path);
     };
     isAuthenticated && fetchData(); 
   },[isAuthenticated])
@@ -56,6 +61,8 @@ function App() {
     }
   }
   // console.log(uid);
+
+  
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -71,7 +78,8 @@ function App() {
                   <Route path={`/:username/form`} exact element={<Pform />}></Route>
                   <Route path={`/:username/personal`} exact element={<PersonalSetting />}></Route>
                   <Route path={`/:username/school`} exact element={<School />}></Route>
-                  <Route path={`/:username/algo`} exact element={<Algo/>}></Route>
+                  <Route path={`/:username/algo`} exact element={<Algo />}></Route>
+                  <Route path={`/:username/projects`} exact element={<Projects/>}></Route>
                 </Routes>
               </main>
             </div> :
