@@ -12,11 +12,10 @@ import Pform from './scenes/profile-forms/Pform';
 import './App.css'
 import PersonalSetting from './scenes/PersonalSetting';
 import url from './url';
-import School from '@mui/icons-material/School';
 import Algo from './scenes/algo/Algo';
 import 'chart.js/auto';
 import Projects from './scenes/projects/Projects';
-
+import School from './scenes/school/School';
 
 export const userContext = React.createContext();
 
@@ -46,7 +45,7 @@ function App() {
       setStudent(resp.data);
       setUid(resp.data.uid);
       
-      console.log(location.pathname)
+      // console.log(location.pathname.split('/')[1]) 
       const path = location.pathname === '/' ? `/${resp.data.username}/dashboard` : location.pathname;
       navigate(path);
     };
@@ -77,7 +76,7 @@ function App() {
                   <Route path={`/:username/dashboard`} exact element={<Dashboard />}></Route>
                   <Route path={`/:username/form`} exact element={<Pform />}></Route>
                   <Route path={`/:username/personal`} exact element={<PersonalSetting />}></Route>
-                  <Route path={`/:username/school`} exact element={<School />}></Route>
+                  <Route path={`/:username/school`} exact element={<School/>}></Route>
                   <Route path={`/:username/algo`} exact element={<Algo />}></Route>
                   <Route path={`/:username/projects`} exact element={<Projects/>}></Route>
                 </Routes>

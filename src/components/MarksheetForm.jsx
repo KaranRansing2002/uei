@@ -14,7 +14,7 @@ import FileBase64 from 'react-file-base64';
 import imageCompression from 'browser-image-compression';
 
 const Semester = ({ aggOption, sem, dispatch,updateObj }) => {
-    const [agg, setAgg] = useState(updateObj!=undefined ? parseInt(updateObj.semesters[sem-1].Aggregate.split(' ')[0]) : 0);
+    const [agg, setAgg] = useState(updateObj!=undefined ? parseFloat(updateObj.semesters[sem-1].Aggregate.split(' ')[0]) : 0);
     const subjects = useRef(updateObj!=undefined ? updateObj.semesters[sem-1].subjects : []);
     const [updatecnt, setUpdateCnt] = useState(0);
 
@@ -32,7 +32,7 @@ const Semester = ({ aggOption, sem, dispatch,updateObj }) => {
         subjects.current[index]['marks'] = e.target.value;
         if (aggOption != 'grade') {
             let aggr = 0;
-            subjects.current.map(obj => { aggr += parseInt(obj['marks']); });
+            subjects.current.map(obj => { aggr += parseFloat(obj['marks']); });
             // console.log(aggr);
             setAgg(aggr / Math.max(subjects.current.length, 1));
         }
@@ -85,7 +85,7 @@ function MarksheetForm({ stateinfo, info, update }) {
         return '';
     })
     useEffect(() => {
-        console.log(Class, Aggregate);
+        // console.log(Class, Aggregate);
         if(update) console.log(updateObj)
     },[Class,Aggregate])
     const [open, setOpen] = useState(false);
@@ -112,7 +112,8 @@ function MarksheetForm({ stateinfo, info, update }) {
                     image : image
                 }
             case 'Add_Aggregate':
-                const { aggregate } = action.payload
+                const { aggregate,aggOption } = action.payload
+                console.log(aggOption);
                 const nagg = `${aggregate} ${aggOption}`
                 // console.log(aggregate,typeof aggregate)
                 return {
@@ -134,9 +135,9 @@ function MarksheetForm({ stateinfo, info, update }) {
     const [state, dispatch] = useReducer(reducer, { Class: Class, aggregate: Aggregate, semesters: (update!=undefined ? updateObj.semesters : [{}, {}]),Date : (update!=undefined ? updateObj.Date.toString().substring(0.10) :  new Date()),image : (update!=undefined ? updateObj.image :  undefined)});
 
     useEffect(() => {
-        // console.log(Aggregate);
-        dispatch({ type: 'Add_Aggregate', payload: { aggregate: Aggregate } });
-    }, [Aggregate])
+        console.log(Aggregate,aggOption);
+        dispatch({ type: 'Add_Aggregate', payload: { aggregate: Aggregate ,aggOption} });
+    }, [Aggregate,aggOption])
 
     useEffect(() => {
         dispatch({ type: 'Add_Class', payload: { Class } })

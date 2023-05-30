@@ -17,7 +17,7 @@ import SubmissionHeatmap from './SubmissionsHeatmap';
 const fetcher = async (...args) => {
     try {
         const response = await axios.get(...args);
-        return response.data;
+        return response.data.resp;
     } catch (error) {
         throw new Error('Failed to fetch data');
     }
@@ -108,7 +108,7 @@ function Algo() {
 
 
     let cfusernames, leetcodeUsername; 
-    data?.resp.dsa.forEach(obj => {
+    data?.dsa.forEach(obj => {
         if (obj.platform === 'Codeforces') {
             cfusernames = obj.usernames;
         } else {
@@ -170,7 +170,7 @@ function Algo() {
                 <div className='m-2'><Header title='Codeforces' subtitle={'no. of questions solved daily'} H={'h3'}/></div>
                 <SubmissionHeatmap data={cfinfo.values} />
             </div>
-            <div className='m-2 mt-4 w-[95%]'>
+            <div className='m-2 mt-4 w-[95%] mb-2'>
                 <div className='m-2'><Header title='Leetcode' subtitle={'no. of questions solved daily'} H={'h3'}/></div>
                 <SubmissionHeatmap data={ltinfo.values} start='2022-01-01' end='2023-04-04' />
             </div>

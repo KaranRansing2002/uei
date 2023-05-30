@@ -5,6 +5,7 @@ function Selector({aggOption,setAggOption}) {
      // state to hold the selected option
 
     const handleOptionChange = (event) => {
+        console.log(event.target.value)
         setAggOption(event.target.value); // update the selected option
     };
 

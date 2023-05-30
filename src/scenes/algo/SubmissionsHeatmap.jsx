@@ -16,7 +16,7 @@ const SubmissionHeatmap = ({ data , start,end }) => {
           if (!value) {
             return "color-empty";
           }
-          const count = Math.min(4, Math.ceil(value.count / 4));
+          const count = Math.min(2, Math.ceil(value.count / 2));
           return `color-github-${count}`;
         }}
         titleForValue={(value) => {

@@ -15,6 +15,7 @@ import SnackbarL from '../../components/SnackbarL';
 const Dsa = ({ platform, dispatch }) => {
     const [usernames, setUsernames] = useState([]);
     const [userName, setUserName] = useState('')
+    const { headerToken, uid } = useContext(userContext)
     const cp = useRef({
         platform: '',
         usernames: [],
@@ -28,12 +29,21 @@ const Dsa = ({ platform, dispatch }) => {
 
     const [updatecnt, setUpdatecnt] = useState(0);
 
+    const sendCPinfo = async (cpdata) => {
+        const resp = await axios.patch(`${url}/student/additionalInfo/${uid}`,cpdata,{
+            headers: {
+                Authorization : `Bearer ${headerToken}`
+            }
+        })
+        console.log(resp);
+    }
+
     useEffect(() => {
 
         cp.current['platform'] = platform;
         cp.current['usernames'] = usernames;
         // console.log(usernames)
-
+ 
 
         if (usernames.length > 0 && platform == 'Codeforces') {
             try {
@@ -42,8 +52,9 @@ const Dsa = ({ platform, dispatch }) => {
                         const { result } = resp.data
                         cp.current.rating = Math.max(result[0].maxRating, result.length > 1 ? result[1].maxRating : 0);
                         cp.current.tag = getRankName(Math.max(getRankValue(result[0].maxRank), result.length > 1 ? getRankValue(result[1].maxRank) : 0))
+                        // console.log(cp.current.rating, cp.current.tag);
                         setUpdatecnt((prev) => prev + 1);
-                    });
+                    }).then(resp=>sendCPinfo(cp.current));
                 let cnt = 0;
                 axios.all(usernames.map(user => axios.get(`https://codeforces.com/api/user.status?handle=${user}&from=1&count=10000`)))
                     .then(resp => {
@@ -52,8 +63,10 @@ const Dsa = ({ platform, dispatch }) => {
                             // console.log(mset.current);
                         }
                         cp.current.solved = cnt;
+                        // console.log(cp.current.solved)
+                        // console.log(cp.current)
                         setUpdatecnt((prev) => prev + 1);
-                    })
+                    }).then(resp=>sendCPinfo(cp.current))
             } catch (error) {
                 console.log(error);
             }
@@ -64,13 +77,19 @@ const Dsa = ({ platform, dispatch }) => {
                     cp.current.rating = 1706;
                     cp.current.solved = resp.data.totalSolved;
                     cp.current.tag = 'NA'
+                    // console.log(cp.current)
                     setUpdatecnt(prev => prev + 1);
-                }).catch((err) => {
+                }).then(resp=>
+                    sendCPinfo(cp.current)
+                ).catch((err) => {
                     alert('there may be some issue we are fixing it for leetcode api')
                 })
         }
-        // console.log(cp.current);
-        if (usernames.length > 0 && platform != '') dispatch({ type: 'Add_Obj', payload: { objName: 'dsa', objValue: { platform, usernames } } })
+        
+        if (usernames.length > 0 && platform != '') {
+            console.log(cp.current.solved);
+            dispatch({ type: 'Add_Obj', payload: { objName: 'dsa', objValue: { platform, usernames } } })
+        } 
 
     }, [platform, usernames])
 
@@ -126,6 +145,9 @@ const Projects = ({ mainDispatch }) => {
                 // console.log(resp.data)
                 // resp.data.map((obj,index)=>setProjs((prev)=>[...prev,{name : obj.name,url : obj.url}]))
                 setData(resp.status != 404 ? resp.data : []);
+                if (resp.status != 404) {
+                    localStorage.setItem('githubData', JSON.stringify(resp.data));
+                }
             })
     }
 
