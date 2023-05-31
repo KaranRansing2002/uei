@@ -16,6 +16,8 @@ import Algo from './scenes/algo/Algo';
 import 'chart.js/auto';
 import Projects from './scenes/projects/Projects';
 import School from './scenes/school/School';
+import Institute from './scenes/institute/Institute';
+import Experience from './scenes/experience/Experience';
 
 export const userContext = React.createContext();
 
@@ -78,7 +80,9 @@ function App() {
                   <Route path={`/:username/personal`} exact element={<PersonalSetting />}></Route>
                   <Route path={`/:username/school`} exact element={<School/>}></Route>
                   <Route path={`/:username/algo`} exact element={<Algo />}></Route>
-                  <Route path={`/:username/projects`} exact element={<Projects/>}></Route>
+                  <Route path={`/:username/projects`} exact element={<Projects />}></Route>
+                  <Route path={`/:username/college`} exact element={<Institute />}></Route>
+                  <Route path={`/:username/work`} exact element={<Experience/>}></Route>
                 </Routes>
               </main>
             </div> :
