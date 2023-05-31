@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Header from '../../components/Header'
 import { userContext } from '../../App'
 import useSWR from 'swr'
@@ -24,6 +24,16 @@ function Experience() {
   const classNames = 'overflow-y-scroll element-class max-h-[90%] scrollbar-hide p-4'
   const { student } = useContext(userContext)
   const { data, isLoading, error } = useSWR(`${url}/work/${student.uid}`, fetcher)
+  const [expps,setExpps] = useState()
+
+  useEffect(() => {
+    if (data && data.exps.length < 2) {
+      console.log(data.exps);
+      data.exps.push({ ...data.exps[0] });
+      data.exps.push({ ...data.exps[0] });
+      data.exps.push({ ...data.exps[0] });
+    }
+  },[data])
 
   if (error) {
     console.log(error.message)
@@ -40,6 +50,8 @@ function Experience() {
       </div>
     )
   }
+
+  
 
   console.log(data)
 
@@ -62,7 +74,7 @@ function Experience() {
                 {/* <form onSubmit={(e) => { e.preventDefault(); Exp.current["desc"].push(desc); setDesc(''); setUpd(prev => prev + 1) }}><CssTextField sx={{ width: `80%` }} label="description" value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="type and press enter (write atmost 5)" /></form> */}
                 <ul className='' style={{ listStyleType: 'disc', paddingLeft: "1.3rem" }}>
                   {
-                    exp.desc.map((obj, index) => (
+                    exp?.desc?.map((obj, index) => (
                       <li key={index} className="text-base">{obj}</li>
                     ))
                   }

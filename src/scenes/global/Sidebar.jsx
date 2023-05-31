@@ -196,13 +196,7 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />}
-            <Item
-              title="Calendar"
-              to={`/${username}/calendar`}
-              icon={<CalendarTodayOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            
             <Item
               title="QR"
               to={`/${username}/qrcode`}

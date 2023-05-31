@@ -18,6 +18,8 @@ import Projects from './scenes/projects/Projects';
 import School from './scenes/school/School';
 import Institute from './scenes/institute/Institute';
 import Experience from './scenes/experience/Experience';
+import Certificates from './scenes/certificates/Certificates';
+import QR from './scenes/QrCode/QR';
 
 export const userContext = React.createContext();
 
@@ -82,7 +84,9 @@ function App() {
                   <Route path={`/:username/algo`} exact element={<Algo />}></Route>
                   <Route path={`/:username/projects`} exact element={<Projects />}></Route>
                   <Route path={`/:username/college`} exact element={<Institute />}></Route>
-                  <Route path={`/:username/work`} exact element={<Experience/>}></Route>
+                  <Route path={`/:username/work`} exact element={<Experience />}></Route>
+                  <Route path={`/:username/certificates`} exact element={<Certificates />}></Route>
+                  <Route path={`/:username/qrcode`} exact element={<QR/>}></Route>
                 </Routes>
               </main>
             </div> :
