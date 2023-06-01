@@ -12,6 +12,7 @@ import { userContext } from '../../App';
 import axios from 'axios'
 import NoDataLoader from '../NoneData/NoDataLoader';
 import NoDataLoader1 from '../NoneData/NoDataLoader1';
+import Header from '../../components/Header';
 
 const fetcher = async (...args) => {
   const resp = await axios.get(...args);
@@ -49,13 +50,14 @@ function TransitionsModal({ open, setOpen }) {
     state: '',
     about: '',
     totalMembers: Number,
-    Access: [user.email],
+    // Access: [user.email],
     link: ''
   })
 
   const orgArr = Object.entries(orginfo.current);
 
   const handleAdd = async () => {
+    console.log(orginfo.current)
     const resp = await axios.patch(`${url}/organisation/${uid}`, { uid,...orginfo['current']}, {
       headers: {
         authorization: `Bearer ${headerToken}`
@@ -118,8 +120,16 @@ function Odashboard() {
   }
 
   return (
-    <div>
-
+    <div className='p-4 overflow-y-scroll element-class max-h-[90%] scrollbar-hide'>
+      <Header title='ORGANISATION' />
+      <div className={`mt-4 bg-[${colors.primary[400]}] p-4`}>
+        <Header title={`Institute Name : ${data.name.toUpperCase()}`} H='h2' />
+        {
+          Object.entries(data).map(([key, value]) => (
+            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">{key} {value}</Typography>
+          ))
+        }
+      </div>
     </div>
   )
 }

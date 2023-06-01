@@ -20,6 +20,7 @@ import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
 import CardMembershipIcon from '@mui/icons-material/CardMembership';
 import { userContext } from "../../App";
 import LaptopMacIcon from '@mui/icons-material/LaptopMac';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -145,6 +146,13 @@ const Sidebar1 = () => {
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
+            />
+            <Item
+              title="students"
+              to={`/organisation/students`}
+              icon={<PersonOutlineIcon />}
+              selected={selected}
+              setSelected={setSelected} 
             />
           </Box>
         </Menu>

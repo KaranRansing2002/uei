@@ -35,11 +35,11 @@ const cfFetcher = async (cfusernames) => {
         tags: {},
         ratings: {},
         submissionDate: null,
-        values :[]
+        values: []
     };
-    let obj={}
+    let obj = {}
     responses.forEach(resp => {
-        
+
         resp.data.result.forEach(prob => {
             if (prob.verdict === 'OK') {
                 cfdata.totalSolved = cfdata.totalSolved === undefined ? 1 : cfdata.totalSolved + 1;
@@ -50,11 +50,11 @@ const cfFetcher = async (cfusernames) => {
                 cfdata.ratings[prob.problem.rating] = cfdata.ratings[prob.problem.rating] === undefined
                     ? 1
                     : cfdata.ratings[prob.problem.rating] + 1;
- 
+
                 cfdata.submissionDate = prob.creationTimeSeconds;
-                obj[(new Date(prob.creationTimeSeconds * 1000)).toISOString().split('T')[0]] = obj[(new Date(prob.creationTimeSeconds * 1000)).toISOString().split('T')[0]] === undefined ? 1 : obj[(new Date(prob.creationTimeSeconds * 1000)).toISOString().split('T')[0]]+1;
-            } 
-        }); 
+                obj[(new Date(prob.creationTimeSeconds * 1000)).toISOString().split('T')[0]] = obj[(new Date(prob.creationTimeSeconds * 1000)).toISOString().split('T')[0]] === undefined ? 1 : obj[(new Date(prob.creationTimeSeconds * 1000)).toISOString().split('T')[0]] + 1;
+            }
+        });
 
     });
     cfdata.values = Object.entries(obj).map(([date, count]) => ({
@@ -84,7 +84,7 @@ const ltFetcher = async (...args) => {
         heatmapData.push({ date, count });
     }
     console.log(heatmapData)
-    return { ...resp['data'],values : heatmapData }
+    return { ...resp['data'], values: heatmapData }
 }
 
 
@@ -98,16 +98,13 @@ function Algo() {
 
     useEffect(() => {
         if (divRef.current) {
-          divRef.current.scrollIntoView({ behavior: "smooth" });
+            divRef.current.scrollIntoView({ behavior: "smooth" });
         }
-      }, []);
+    }, []);
 
-    if (error) {
-        return <div>Error: Failed to fetch data</div>;
-    }
-
-
-    let cfusernames, leetcodeUsername; 
+    
+    
+    let cfusernames, leetcodeUsername;
     data?.dsa.forEach(obj => {
         if (obj.platform === 'Codeforces') {
             cfusernames = obj.usernames;
@@ -115,6 +112,9 @@ function Algo() {
             leetcodeUsername = obj.usernames[0];
         }
     });
+    if (error) {
+        return <div>Error: Failed to fetch data</div>;
+    }
 
     const { data: cfinfo, isLoading, error: cferror } = useSWR(() => cfusernames && `cfinfo-${cfusernames.join('-')}`, () => cfFetcher(cfusernames));
 
@@ -138,7 +138,7 @@ function Algo() {
     const ltpiedata = { 'tags': { 'easy': ltinfo.easySolved, 'medium': ltinfo.mediumSolved, 'hard': ltinfo.hardSolved } }
     // console.log(cfinfo)
 
-    
+
 
     return (
         <div className='p-2 overflow-y-scroll element-class max-h-[90%] scrollbar-hide'>
@@ -163,15 +163,15 @@ function Algo() {
                     <PieChart data={cfinfo} name='Codeforces' color={colors.primary[400]} />
                 </div>
                 <div className='h-44 sm:h-72 flex m-2'>
-                    <PieChart data={ltpiedata} name='Leetcode' color={colors.primary[400]}/>
+                    <PieChart data={ltpiedata} name='Leetcode' color={colors.primary[400]} />
                 </div>
             </div>
             <div className='m-2 w-[95%]'>
-                <div className='m-2'><Header title='Codeforces' subtitle={'no. of questions solved daily'} H={'h3'}/></div>
+                <div className='m-2'><Header title='Codeforces' subtitle={'no. of questions solved daily'} H={'h3'} /></div>
                 <SubmissionHeatmap data={cfinfo.values} />
             </div>
             <div className='m-2 mt-4 w-[95%] mb-2'>
-                <div className='m-2'><Header title='Leetcode' subtitle={'no. of questions solved daily'} H={'h3'}/></div>
+                <div className='m-2'><Header title='Leetcode' subtitle={'no. of questions solved daily'} H={'h3'} /></div>
                 <SubmissionHeatmap data={ltinfo.values} start='2022-01-01' end='2023-04-04' />
             </div>
         </div>

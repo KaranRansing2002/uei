@@ -23,6 +23,7 @@ import QR from './scenes/QrCode/QR';
 import Sidebar1 from './scenes/global/Sidebar1';
 import Odashboard from './scenes/organisation/Odashboard';
 import Topbar1 from './scenes/global/Topbar1';
+import Ostudents from './scenes/organisation/Ostudents';
 
 export const userContext = React.createContext();
 
@@ -103,6 +104,7 @@ function App() {
                   <Topbar1 logout={logout} />
                   <Routes>
                     <Route path={`/organisation/dashboard`} exact element={<Odashboard />}></Route>
+                    <Route path={`/organisation/students`} exact element={<Ostudents />}></Route>
                   </Routes>
                 </main>
               </div> :
