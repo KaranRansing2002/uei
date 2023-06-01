@@ -20,6 +20,9 @@ import Institute from './scenes/institute/Institute';
 import Experience from './scenes/experience/Experience';
 import Certificates from './scenes/certificates/Certificates';
 import QR from './scenes/QrCode/QR';
+import Sidebar1 from './scenes/global/Sidebar1';
+import Odashboard from './scenes/organisation/Odashboard';
+import Topbar1 from './scenes/global/Topbar1';
 
 export const userContext = React.createContext();
 
@@ -34,27 +37,34 @@ function App() {
   const [student, setStudent] = useState(null);
   const navigate = useNavigate()
   const location = useLocation();
+  const [role, setRole] = useState(() => {
+    return localStorage.getItem('role') ? localStorage.getItem('role') : null;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('role', role);
+  },[role])
 
   useEffect(() => {
     const fetchData = async () => {
       const token = await getAccessTokenSilently();
-      setHeaderToken(token);  
+      setHeaderToken(token);
       const resp = await axios.get(`${url}/signin`, {
         headers: {
-          authorization : `Bearer ${token}`
+          authorization: `Bearer ${token}`
         }
       })
 
       localStorage.setItem('student', JSON.stringify(resp.data));
       setStudent(resp.data);
       setUid(resp.data.uid);
-      
+
       // console.log(location.pathname.split('/')[1]) 
       const path = location.pathname === '/' ? `/${resp.data.username}/dashboard` : location.pathname;
       navigate(path);
     };
-    isAuthenticated && fetchData(); 
-  },[isAuthenticated])
+    (isAuthenticated && role === 'student') && fetchData();
+  }, [isAuthenticated])
 
   const signin = async () => {
     try {
@@ -63,16 +73,55 @@ function App() {
       console.log(error.message)
     }
   }
-  // console.log(uid);
 
+  useEffect(() => {
+    if (role === 'organisation' && isAuthenticated) {
+      console.log('there')
+      const createOrg = async () => {
+        const resp = await axios.get(`${url}/organisation/create/${user.email}`,{
+          headers: {
+            authorization: `Bearer ${headerToken}`
+          }
+        })
+        console.log(resp.data);
+        setUid(resp.data.resp.uid);
+      }
+      isAuthenticated  && createOrg();
+    }
+  }, [role,isAuthenticated])
   
+  if (role === 'organisation') {
+    console.log('here')
+    return (
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline>
+            <userContext.Provider value={{ headerToken,user,uid }}>
+              {(isAuthenticated && user) ? <div className='app flex  '>
+                <Sidebar1 isSidebar={isSidebar} user={user} />
+                <main className='w-full'>
+                  <Topbar1 logout={logout} />
+                  <Routes>
+                    <Route path={`/organisation/dashboard`} exact element={<Odashboard />}></Route>
+                  </Routes>
+                </main>
+              </div> :
+                <Login loginwith={signin} setRole={setRole} />
+              }
+            </userContext.Provider>
+          </CssBaseline>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
+    )
+  }
+  // console.log(uid);
 
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline>
-          <userContext.Provider value={{ uid, headerToken,student,setStudent}}>
-            {(isAuthenticated && uid && student!=null) ? <div className='app flex  '>
+          <userContext.Provider value={{ uid, headerToken, student, setStudent }}>
+            {(isAuthenticated && uid && student != null) ? <div className='app flex  '>
               <Sidebar isSidebar={isSidebar} student={student} />
               <main className='w-full'>
                 <Topbar logout={logout} />
@@ -80,17 +129,17 @@ function App() {
                   <Route path={`/:username/dashboard`} exact element={<Dashboard />}></Route>
                   <Route path={`/:username/form`} exact element={<Pform />}></Route>
                   <Route path={`/:username/personal`} exact element={<PersonalSetting />}></Route>
-                  <Route path={`/:username/school`} exact element={<School/>}></Route>
+                  <Route path={`/:username/school`} exact element={<School />}></Route>
                   <Route path={`/:username/algo`} exact element={<Algo />}></Route>
                   <Route path={`/:username/projects`} exact element={<Projects />}></Route>
                   <Route path={`/:username/college`} exact element={<Institute />}></Route>
                   <Route path={`/:username/work`} exact element={<Experience />}></Route>
                   <Route path={`/:username/certificates`} exact element={<Certificates />}></Route>
-                  <Route path={`/:username/qrcode`} exact element={<QR/>}></Route>
+                  <Route path={`/:username/qrcode`} exact element={<QR />}></Route>
                 </Routes>
               </main>
             </div> :
-              <Login loginwith={signin} />
+              <Login loginwith={signin} setRole={setRole}/>
             }
           </userContext.Provider>
         </CssBaseline>

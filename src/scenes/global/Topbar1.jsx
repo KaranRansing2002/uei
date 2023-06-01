@@ -12,27 +12,16 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Navigate, useNavigate } from "react-router-dom";
 import SearchBar from "../../components/SearchBar";
 
-const Topbar = (props) => {
+const Topbar1 = (props) => {
   const logout = props.logout
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
-  const student = JSON.parse(localStorage.getItem('student'))
 
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
-      {/* SEARCH BAR */}
-      {/* <Box
-        display="flex"
-        backgroundColor={colors.primary[400]}
-        borderRadius="3px"
-      >
-        <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
-        <IconButton type="button" sx={{ p: 1 }}>
-          <SearchIcon />
-        </IconButton>
-      </Box> */}
+      
       <div className='w-8'><SearchBar color={colors.primary[400]} /></div>
 
       {/* ICONS */}
@@ -50,7 +39,7 @@ const Topbar = (props) => {
         <IconButton >
           <SettingsOutlinedIcon />
         </IconButton>
-        <IconButton onClick = {()=>navigate(`/${student.username}/personal`)}>
+        <IconButton >
           <PersonOutlinedIcon />
         </IconButton>
         <IconButton onClick={() => { localStorage.clear(); logout(); }}>
@@ -61,4 +50,4 @@ const Topbar = (props) => {
   );
 };
 
-export default Topbar;
+export default Topbar1;
