@@ -23,6 +23,7 @@ const gtFetcher = async (...args) => {
 function Projects() {
     const { student } = useContext(userContext)
     const githubUserName = student.additionalInfo.github?.split('https://github.com/')[1];
+    console.log(student.additionalInfo,githubUserName)
 
     const { data, isLoading: gtLoading, error: gtError } = useSWR(`https://api.github.com/users/${githubUserName}/repos?sort=updated`, gtFetcher);
 

@@ -105,7 +105,7 @@ function Institute() {
                 <div className={`bg-[${colors.primary[400]}] p-4`}>
                     <Typography color={colors.greenAccent[100]}  variant="h5" fontWeight="600">CURRENT YEAR : {currentYear?.Class.toUpperCase()}</Typography>
                     <Typography color={colors.greenAccent[100]}  variant="h5" fontWeight="600">CURRENT AGGREGATE : {currentYear?.aggregate.toUpperCase()}</Typography>
-                    <Typography color={colors.greenAccent[100]}  variant="h5" fontWeight="600">BEST YEAR : {bestYear?.Class.toUpperCase()} ({bestYear?.aggregate})</Typography>
+                    <Typography color={colors.greenAccent[100]}  variant="h5" fontWeight="600">BEST YEAR : {bestYear?.Class?.toUpperCase()} ({bestYear?.aggregate})</Typography>
                     <Typography color={colors.greenAccent[100]} variant="h5" fontWeight="600">TOTAL AGGREGATE TILL NOW : {totalAgg} SGPA</Typography>
                 </div>
             </div> 

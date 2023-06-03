@@ -146,7 +146,30 @@ const Sidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
+            <Typography
+              variant="h6"
+              color={colors.grey[300]}
+              sx={{ m: "15px 0 5px 20px" }}
+            >
+              Skills
+            </Typography>
+            <Item
+              title="DSA/CP"
+              to={`/${username}/algo`}
+              icon={<BarChartOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Projects"
+              to={`/${username}/projects`}
+              icon={<LaptopMacIcon/>}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            
 
+            
             <Typography
               variant="h6"
               color={colors.grey[300]}
@@ -201,28 +224,6 @@ const Sidebar = () => {
               title="QR"
               to={`/${username}/qrcode`}
               icon={<QrCodeScannerIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
-            >
-              Skills
-            </Typography>
-            <Item
-              title="DSA/CP"
-              to={`/${username}/algo`}
-              icon={<BarChartOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Projects"
-              to={`/${username}/projects`}
-              icon={<LaptopMacIcon/>}
               selected={selected}
               setSelected={setSelected}
             />

@@ -73,6 +73,7 @@ const SemesterDisp = ({ data, sem }) => {
 
 
 function DisplayInfo({ data, title }) {
+    console.log(data)
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [toggle, setToggle] = useState(false);
@@ -94,8 +95,8 @@ function DisplayInfo({ data, title }) {
             </div>
             <div className='mt-2 grid grid-cols-2'>
                 <div>
-                    <Typography color={colors.grey[100]} variant="h5" fontWeight="600">CLASS : {data.Class}</Typography>
-                    <Typography color={colors.grey[100]} variant="h5" fontWeight="600">Date : {data.Date.split("T")[0]}</Typography>
+                    <Typography color={colors.grey[100]} variant="h5" fontWeight="600">CLASS : {data?.Class}</Typography>
+                    <Typography color={colors.grey[100]} variant="h5" fontWeight="600">Date : {data?.Date?.split("T")[0]}</Typography>
                 </div>
                 <div className='flex flex-col items-end '>
                     <Typography color={colors.greenAccent[500]} variant="h5" fontWeight="600">Aggregate</Typography>
@@ -106,10 +107,10 @@ function DisplayInfo({ data, title }) {
                 <Button variant='contained' fullWidth color='secondary' onClick={() => setToggle(p => !p)} >Expand</Button>
             </div>
             {
-                toggle &&
+                toggle && data?.semesters[0] && 
                 <div >
                     {
-                        (data.semesters[0].Aggregate && data.semesters[1].Aggregate) ?
+                        (data?.semesters[0].Aggregate && data.semesters[1].Aggregate) ?
                             <div className='grid grid-cols-2 place-items-center mt-4'>
                                 <SemesterDisp data={data.semesters[0]} sem={1} />
                                 <SemesterDisp data={data.semesters[1]} sem={2} />

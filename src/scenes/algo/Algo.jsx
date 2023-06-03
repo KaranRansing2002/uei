@@ -112,13 +112,13 @@ function Algo() {
             leetcodeUsername = obj.usernames[0];
         }
     });
+    
+    const { data: cfinfo, isLoading, error: cferror } = useSWR(() => cfusernames && `cfinfo-${cfusernames.join('-')}`, () => cfFetcher(cfusernames));
+    
+    const { data: ltinfo, isLoading: ltloading, error: lterror } = useSWR(() => leetcodeUsername && `https://leetcode-stats-api.herokuapp.com/${leetcodeUsername}`, ltFetcher);
     if (error) {
         return <div>Error: Failed to fetch data</div>;
     }
-
-    const { data: cfinfo, isLoading, error: cferror } = useSWR(() => cfusernames && `cfinfo-${cfusernames.join('-')}`, () => cfFetcher(cfusernames));
-
-    const { data: ltinfo, isLoading: ltloading, error: lterror } = useSWR(() => leetcodeUsername && `https://leetcode-stats-api.herokuapp.com/${leetcodeUsername}`, ltFetcher);
 
     if (isLoading || !data || !cfinfo || !ltinfo) {
         return (

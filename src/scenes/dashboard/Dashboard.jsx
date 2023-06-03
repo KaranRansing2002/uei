@@ -201,7 +201,7 @@ const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const classNames = 'overflow-y-scroll element-class max-h-[90%] scrollbar-hide p-4 '
-  const { student } = useContext(userContext);
+  const { student,uid } = useContext(userContext);
   const [open, setOpen] = useState(false)
 
   const { data, isLoading, error } = useSWR(`${url}/dashboard/${student.uid}`, fetcher)
@@ -274,13 +274,13 @@ const Dashboard = () => {
             ))}
           </div>
 
-          <div className={`bg-[${colors.primary[400]}] p-2 mt-2 flex items-center gap-2`}>
+          { <div className={`bg-[${colors.primary[400]}] p-2 mt-2 flex items-center gap-2`}>
             <IconButton onClick={() => setOpen(true)}><AddIcon /></IconButton>
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
               Add Achievement
             </Typography>
             <ModalAch open={open} setOpen={setOpen} />
-          </div>
+          </div>}
 
         </div>
       </div>

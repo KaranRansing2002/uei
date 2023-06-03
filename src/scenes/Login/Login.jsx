@@ -24,9 +24,7 @@ function Login({loginwith,setRole}) {
         <Button variant="contained" color="success" style={{ color: '#001830', fontWeight: 'bold' }} onClick={()=>{setRole('student');loginwith();}}>
           SIGNIN AS STUDENT
         </Button>
-        <Button variant="contained" color="success" style={{ color: '#001830', fontWeight: 'bold' }} onClick={()=>{setRole('admin');loginwith();}}>
-          SIGNIN AS ADMIN
-        </Button>
+        
       </div>
     </Box>
   )
