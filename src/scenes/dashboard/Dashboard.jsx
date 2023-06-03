@@ -20,7 +20,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import WebIcon from '@mui/icons-material/Web';
 import { Link } from "react-router-dom";
 import AttendanceBarGraph from "../../components/Attendance";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { userContext } from "../../App";
 import useSWR from 'swr';
 import url from "../../url";
@@ -209,7 +209,7 @@ const Dashboard = () => {
   if (error) {
     console.log(error.message)
     return (
-      <NoDataLoader />
+      <NoDataLoader message={"No sufficient data Try searching for profile karan ransing to view how data is visualized"} />
     )
   }
 

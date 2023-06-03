@@ -21,7 +21,7 @@ function NoDataLoader({message}) {
                 <div class="face top"></div>
                 <div class="face bottom"></div>
             </div>
-            <h2 className='text-2xl'>{message ? message : 'No Data Available '}</h2>
+            <h2 className='text-2xl text-center'>{message ? message : 'No Data Available '}</h2>
             {(student.uid === uid) && <Button variant='contained' size='Large' color='success' onClick={() => navigate(`/${student.username}/form`)}>Profile Form</Button>}
         </div>
     )
